@@ -31,39 +31,63 @@ async function getArticleData(id: string) {
     }
   }
 
-  // Case 2: Fallback Mock Data
-  const MOCK_ARTICLES: Record<string, any> = {
-    "2": {
-      category: "Campus Economy",
-      title: "York University Announces New Fintech Research Grant",
-      subtitle: "The Department of Economics has secured a $2M grant to study the effects of decentralized finance on Canadian banking structures.",
-      date: "DEC 27, 2025",
-      author: "Sarah Jenkins",
-      readTime: "3 min read",
-      content: [
-        "York University has announced a landmark $2 million research grant aimed at exploring the intersection of decentralized finance (DeFi) and traditional Canadian banking structures.",
-        "The grant, provided by the Federal Economic Development Agency, will establish a new specialized lab within the Vari Hall extension. 'This is a pivotal moment for student researchers,' said Dean Alistair.",
-        "Students will have the opportunity to work directly with blockchain ledger technology and simulate market crashes to test resilience."
-      ],
-      keyPoints: ["$2M Grant secured from FedDev", "New lab opening in Vari Hall", "Focus on student-led DeFi research"]
-    },
-    "3": {
-      category: "Real Estate",
-      title: "Toronto Housing Market Sees Unexpected Q4 Rally",
-      subtitle: "Despite high interest rates, inventory shortages are driving prices up in the GTA suburbs.",
-      date: "DEC 26, 2025",
-      author: "R. Singh",
-      readTime: "4 min read",
-      content: [
-        "The Greater Toronto Area real estate market defied analyst expectations in Q4, posting a 3.2% increase in benchmark prices despite the Bank of Canada's restrictive rate policy.",
-        "Supply shortages remain the primary driver. Listings hit a 10-year low in November, forcing buyers into competitive bidding wars for the few available entry-level homes.",
-        "Economists warn that this rally may be short-lived if unemployment figures tick up in Q1 2026."
-      ],
-      keyPoints: ["Benchmark price up 3.2%", "Listings at 10-year lows", "Bidding wars return to suburbs"]
+  // Case 2: Featured Story
+  if (id.startsWith("featured-")) {
+    try {
+      const index = parseInt(id.replace("featured-", ""), 10);
+      const docSnap = await getDoc(doc(db, "daily_edition", "featured_stories"));
+      if (docSnap.exists()) {
+        const items = docSnap.data()?.items || [];
+        const story = items[index];
+        if (story) {
+          return {
+            id: id,
+            category: story.category || "Featured",
+            title: story.title,
+            subtitle: story.summary,
+            date: story.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            author: story.author || "Staff",
+            readTime: "3 min read",
+            content: [story.summary],
+            keyPoints: [],
+            imageUrl: null,
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching featured story:", error);
     }
-  };
+  }
 
-  return MOCK_ARTICLES[id] || null;
+  // Case 3: Opinion piece
+  if (id.startsWith("opinion-")) {
+    try {
+      const index = parseInt(id.replace("opinion-", ""), 10);
+      const docSnap = await getDoc(doc(db, "daily_edition", "opinions"));
+      if (docSnap.exists()) {
+        const items = docSnap.data()?.items || [];
+        const opinion = items[index];
+        if (opinion) {
+          return {
+            id: id,
+            category: "Opinion",
+            title: opinion.title,
+            subtitle: opinion.snippet || "",
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            author: opinion.author,
+            readTime: "4 min read",
+            content: [opinion.snippet || ""],
+            keyPoints: [],
+            imageUrl: null,
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching opinion:", error);
+    }
+  }
+
+  return null;
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {

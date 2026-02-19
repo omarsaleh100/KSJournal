@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Public read access to daily edition content
+    match /daily_edition/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Public read access to system data (ticker)
+    match /system/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Subscribers: anyone can create, no read/update/delete from client
+    match /subscribers/{subscriberId} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'subscribedAt'])
+                    && request.resource.data.email is string;
+      allow read, update, delete: if false;
+    }
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

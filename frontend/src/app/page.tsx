@@ -3,37 +3,40 @@ import { Ticker } from "@/components/ticker";
 import { NewsCard } from "@/components/news-card";
 import { WhatsNews } from "@/components/whats-news";
 import { OpinionColumn } from "@/components/opinion-column";
+import { NewsletterForm } from "@/components/newsletter-form";
 import Link from "next/link";
 import { BarChart3, TrendingUp, Users } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { CurrentDate } from "@/components/current-date"; // <--- Add this
+import { CurrentDate } from "@/components/current-date";
 
 async function getDailyEdition() {
   // Fetch ALL collections in parallel for speed
-  const [tickerSnap, newsSnap, heroSnap, featuredSnap, globalSnap, deepDiveSnap, campusSnap] = await Promise.all([
+  const [tickerSnap, newsSnap, heroSnap, featuredSnap, globalSnap, deepDiveSnap, campusSnap, opinionsSnap] = await Promise.all([
     getDoc(doc(db, "system", "market_ticker")),
     getDoc(doc(db, "daily_edition", "whats_news")),
     getDoc(doc(db, "daily_edition", "hero_story")),
-    getDoc(doc(db, "daily_edition", "featured_stories")), // <--- NEW
+    getDoc(doc(db, "daily_edition", "featured_stories")),
     getDoc(doc(db, "daily_edition", "global_briefing")),
     getDoc(doc(db, "daily_edition", "deep_dive")),
-    getDoc(doc(db, "daily_edition", "campus_news"))       // <--- NEW
+    getDoc(doc(db, "daily_edition", "campus_news")),
+    getDoc(doc(db, "daily_edition", "opinions")),
   ]);
 
   return {
     tickerData: tickerSnap.exists() ? tickerSnap.data()?.items : [],
     newsData: newsSnap.exists() ? newsSnap.data() : { business: [], world: [] },
     heroData: heroSnap.exists() ? heroSnap.data() : null,
-    featuredData: featuredSnap.exists() ? featuredSnap.data()?.items : [], // <--- NEW
+    featuredData: featuredSnap.exists() ? featuredSnap.data()?.items : [],
     globalData: globalSnap.exists() ? globalSnap.data()?.items : [],
     deepDiveData: deepDiveSnap.exists() ? deepDiveSnap.data() : null,
-    campusData: campusSnap.exists() ? campusSnap.data()?.items : []        // <--- NEW
+    campusData: campusSnap.exists() ? campusSnap.data()?.items : [],
+    opinionsData: opinionsSnap.exists() ? opinionsSnap.data()?.items : [],
   };
 }
 
 export default async function Home() {
-  const { tickerData, newsData, heroData, featuredData, globalData, deepDiveData, campusData } = await getDailyEdition();
+  const { tickerData, newsData, heroData, featuredData, globalData, deepDiveData, campusData, opinionsData } = await getDailyEdition();
 
   return (
     <div className="min-h-screen bg-white font-sans text-zinc-900 selection:bg-red-100 selection:text-red-900">
@@ -102,7 +105,7 @@ export default async function Home() {
 
           {/* RIGHT: OPINION */}
           <aside className="lg:col-span-3 lg:border-l lg:border-zinc-200 lg:pl-6">
-            <OpinionColumn />
+            <OpinionColumn opinions={opinionsData} />
           </aside>
         </div>
 
@@ -205,8 +208,7 @@ export default async function Home() {
               <div className="bg-zinc-100 p-6 border border-zinc-200 sticky top-24">
                  <h3 className="text-lg font-serif font-bold text-zinc-900 mb-2">The Daily Brief</h3>
                  <p className="text-sm text-zinc-600 mb-4">Essential economic news, delivered to your inbox every morning.</p>
-                 <input type="email" placeholder="Your email address" className="w-full px-3 py-2 text-sm border border-zinc-300 mb-2 focus:outline-none focus:border-red-800" />
-                 <button className="w-full bg-zinc-900 text-white text-sm font-bold py-2 uppercase tracking-wider hover:bg-red-800 transition-colors">Subscribe</button>
+                 <NewsletterForm />
               </div>
            </div>
         </section>

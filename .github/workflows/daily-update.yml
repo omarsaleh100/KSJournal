@@ -1,0 +1,37 @@
+name: Daily Edition Publisher
+
+on:
+  schedule:
+    # Run at 7:00 AM EST (12:00 UTC) every day
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Create service account file
+        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > backend/service_account.json
+
+      - name: Create .env file
+        run: |
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > backend/.env
+          echo "FIREBASE_PROJECT_ID=the-ksj" >> backend/.env
+
+      - name: Run daily update
+        run: python backend/tasks/run_daily.py

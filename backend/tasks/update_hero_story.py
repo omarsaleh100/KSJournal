@@ -74,39 +74,6 @@ def update_hero_and_featured():
     except Exception as e:
         print(f"   ❌ Hero Generation Failed: {e}")
 
-    # --- 2. PROCESS FEATURED (Story #2 and #3) ---
-    featured_items = []
-    
-    # Grab next 2 stories
-    for entry in feed.entries[1:3]:
-        print(f"   👉 Processing Feature: {entry.title[:30]}...")
-        feat_prompt = f"""
-        Task: Summarize this news for a small card.
-        Headline: {entry.title}
-        Summary: {entry.summary}
-        
-        Output JSON: {{ "category": "Market Update", "title": "Short Title", "summary": "One sentence summary." }}
-        """
-        try:
-            feat_res = model.generate_content(feat_prompt, generation_config={"response_mime_type": "application/json"})
-            feat_data = json.loads(feat_res.text)
-            
-            featured_items.append({
-                "id": entry.link, # Use link as unique ID
-                "date": "TODAY",
-                "author": "Staff",
-                **feat_data
-            })
-        except:
-            continue
-
-    if featured_items:
-        db.collection("daily_edition").document("featured_stories").set({
-            "lastUpdated": firestore.SERVER_TIMESTAMP,
-            "items": featured_items
-        })
-        print("   💾 Saved Featured Stories.")
-
 if __name__ == "__main__":
     update_hero_and_featured()
 
