@@ -18,7 +18,7 @@ RSS Feeds + Yahoo Finance
    Readers (web browser)
 ```
 
-Every day at 7 AM EST, a GitHub Actions workflow runs 8 task scripts that:
+Every day at 9:35 AM EST (after US market open), a GitHub Actions workflow runs 8 task scripts that:
 
 1. **Market Ticker** — Fetches live prices for S&P/TSX, S&P 500, Oil, CAD/USD, Bitcoin
 2. **What's News** — Summarizes top business & world headlines into WSJ-style bullets
@@ -56,7 +56,7 @@ Every day at 7 AM EST, a GitHub Actions workflow runs 8 task scripts that:
 ```
 KSJournal/
 ├── .github/workflows/
-│   └── daily-update.yml        # Cron job: runs all tasks daily at 7 AM EST
+│   └── daily-update.yml        # Cron job: runs all tasks daily at 9:35 AM EST
 ├── backend/
 │   ├── app/
 │   │   ├── db.py               # Firebase Admin initialization
@@ -171,7 +171,7 @@ The project uses GitHub Actions for automated daily publishing. To enable it:
 2. Add these secrets:
    - `FIREBASE_SERVICE_ACCOUNT` — Full contents of your `service_account.json`
    - `GEMINI_API_KEY` — Your Google AI Studio API key
-3. The workflow runs automatically at 7 AM EST every day
+3. The workflow runs automatically at 9:35 AM EST every day
 4. You can also trigger it manually from the **Actions** tab
 
 ## Firestore Collections
