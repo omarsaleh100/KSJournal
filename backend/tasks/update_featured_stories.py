@@ -92,7 +92,7 @@ def update_featured_stories():
         item["id"] = f"featured-{i}"
         # Find matching entry by title similarity
         matching_entry = entry_lookup.get(item.get("title"))
-        item["imageUrl"] = get_image_with_fallback(matching_entry, item["title"])
+        item["imageUrl"] = get_image_with_fallback(matching_entry, item["title"], category=item.get("category"), validate=True)
 
     # 3. Save to Firestore
     try:

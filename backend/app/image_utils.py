@@ -1,9 +1,63 @@
-import urllib.parse
+import hashlib
 import requests
 from bs4 import BeautifulSoup
-from app.genai_engine import generate_text
+from app.genai_engine import generate_json
 
-YORK_FALLBACK = "https://www.yorku.ca/brand/wp-content/uploads/sites/18/2020/09/YorkU-VariHall-Summer.jpg"
+# Curated, verified Unsplash photos by category (all confirmed 200 OK)
+STOCK_IMAGES = {
+    "markets": [
+        "photo-1611974789855-9c2a0a7236a3",  # stock chart
+        "photo-1535320903710-d993d3d77d29",  # trading floor
+        "photo-1460925895917-afdab827c52f",  # dashboard analytics
+    ],
+    "economy": [
+        "photo-1526304640581-d334cdbbf45e",  # currency
+        "photo-1554224155-6726b3ff858f",  # charts on paper
+        "photo-1444653614773-995cb1ef9efa",  # city aerial
+    ],
+    "policy": [
+        "photo-1541339907198-e08756dedf3f",  # parliament
+        "photo-1559136555-9303baea8ebd",  # globe
+        "photo-1486406146926-c627a92ad1ab",  # skyscrapers
+    ],
+    "campus": [
+        "photo-1562774053-701939374585",  # campus building
+        "photo-1434030216411-0b793f4b4173",  # library study
+        "photo-1523240795612-9a054b0db644",  # university lecture
+    ],
+    "default": [
+        "photo-1486406146926-c627a92ad1ab",  # skyscrapers
+        "photo-1460925895917-afdab827c52f",  # analytics
+        "photo-1559136555-9303baea8ebd",  # globe
+        "photo-1554224155-6726b3ff858f",  # charts
+        "photo-1526304640581-d334cdbbf45e",  # currency
+    ],
+}
+
+UNSPLASH_BASE = "https://images.unsplash.com"
+
+
+def _pick_stock_image(title, category=None):
+    """Pick a deterministic stock image based on title hash and optional category."""
+    key = (category or "default").lower()
+    # Map common keywords to categories
+    if not category:
+        lower = title.lower()
+        if any(w in lower for w in ["market", "stock", "trade", "investor", "rally", "dow", "tsx"]):
+            key = "markets"
+        elif any(w in lower for w in ["economy", "gdp", "inflation", "rate", "bank", "currency"]):
+            key = "economy"
+        elif any(w in lower for w in ["policy", "government", "tariff", "regulation", "global", "summit"]):
+            key = "policy"
+        elif any(w in lower for w in ["campus", "university", "student", "york", "professor", "research"]):
+            key = "campus"
+        else:
+            key = "default"
+
+    pool = STOCK_IMAGES.get(key, STOCK_IMAGES["default"])
+    idx = int(hashlib.md5(title.encode()).hexdigest(), 16) % len(pool)
+    photo_id = pool[idx]
+    return f"{UNSPLASH_BASE}/{photo_id}?w=1024&h=600&fit=crop&auto=format&q=80"
 
 
 def _extract_best_img_from_html(html):
@@ -62,23 +116,6 @@ def get_image_from_entry(entry):
     return None
 
 
-def generate_ai_image(title):
-    """Generate an image URL using Pollinations.ai with a Gemini-crafted prompt."""
-    try:
-        prompt = (
-            f"Write a 5-word visual description for an image representing this news headline: "
-            f"'{title}'. Use keywords like 'photorealistic', '4k', 'cinematic'. "
-            f"Output ONLY the 5-10 words."
-        )
-        image_prompt = generate_text(prompt)
-        if not image_prompt:
-            image_prompt = title[:50]
-        encoded = urllib.parse.quote(image_prompt)
-        return f"https://image.pollinations.ai/prompt/{encoded}?nologo=true&width=1024&height=600&seed=42"
-    except Exception:
-        return None
-
-
 def validate_image_url(url):
     """Check if a URL actually resolves to an image (HEAD request)."""
     if not url:
@@ -86,24 +123,23 @@ def validate_image_url(url):
     try:
         resp = requests.head(url, timeout=5, allow_redirects=True)
         content_type = resp.headers.get("content-type", "")
-        return resp.status_code == 200 and "image" in content_type
+        return resp.status_code == 200 and ("image" in content_type or "octet-stream" in content_type)
     except Exception:
         return False
 
 
-def get_image_with_fallback(entry, title, validate=False):
-    """Orchestrate: try RSS image -> optionally validate -> AI generate if missing/invalid."""
+def get_image_with_fallback(entry, title, category=None, validate=False):
+    """Orchestrate: try RSS image -> validate -> stock photo fallback."""
     url = get_image_from_entry(entry) if entry else None
 
-    if url and validate and not validate_image_url(url):
-        print(f"         ⚠️ Invalid image URL, generating AI image for: '{title[:30]}...'")
-        url = None
-
-    if not url:
-        print(f"         🎨 Generating AI illustration for: '{title[:30]}...'")
-        url = generate_ai_image(title)
-
     if url:
-        return url
+        if validate and not validate_image_url(url):
+            print(f"         ⚠️ Image URL failed validation for: '{title[:30]}...'")
+            url = None
+        else:
+            print(f"         ✅ Using real image for: '{title[:30]}...'")
+            return url
 
-    return YORK_FALLBACK
+    # Fallback to curated stock photo (always works, no external API dependency)
+    print(f"         🖼️ Using stock photo for: '{title[:30]}...'")
+    return _pick_stock_image(title, category)
