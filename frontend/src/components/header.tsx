@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { Search, Menu } from "lucide-react";
-
-const LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/the-ksj.firebasestorage.app/o/KSJ%20black.png?alt=media";
+import { Menu } from "lucide-react";
 
 export function Header() {
   return (
@@ -16,7 +14,7 @@ export function Header() {
             aria-label="The Keele Street Journal Homepage"
           >
             <img
-              src={LOGO_URL}
+              src="/ksj-logo.png"
               alt="KSJ Logo"
               className="h-10 w-10 object-contain"
             />
@@ -35,15 +33,9 @@ export function Header() {
           <Link href="/opinion" className="hover:text-zinc-900 transition-colors">Opinion</Link>
         </nav>
 
-        {/* Actions */}
+        {/* Mobile Menu */}
         <div className="flex items-center gap-4">
-          <button 
-            className="p-2 hover:bg-zinc-100 rounded-full transition-colors"
-            aria-label="Search articles"
-          >
-            <Search className="w-5 h-5 text-zinc-600" aria-hidden="true" />
-          </button>
-          <button 
+          <button
             className="md:hidden p-2 hover:bg-zinc-100 rounded-full"
             aria-label="Open menu"
           >

@@ -188,14 +188,9 @@ export default async function Home() {
         {/* SECTION 4: REAL GLOBAL BRIEFING */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12">
            <div className="md:col-span-8">
-              <div className="flex items-center justify-between mb-6 border-b border-zinc-200 pb-2">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-red-800" />
-                  <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Global Briefing</h2>
-                </div>
-                <Link href="/policy" className="text-xs font-bold text-red-700 hover:text-red-900 uppercase tracking-wide">
-                  View All →
-                </Link>
+              <div className="flex items-center gap-2 mb-6 border-b border-zinc-200 pb-2">
+                <TrendingUp className="w-5 h-5 text-red-800" />
+                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Global Briefing</h2>
               </div>
               <div className="space-y-6">
                 {globalData.map((item: any, i: number) => (
@@ -227,36 +222,33 @@ export default async function Home() {
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
            <div>
              <span className="text-white font-serif font-bold text-lg block mb-4">The Keele Street Journal</span>
-             <p className="mb-4">Bridging the gap between academic theory and market reality.</p>
+             <p className="mb-4">AI-powered financial newspaper for York University&apos;s Economics Students. Market analysis, campus news, and economic insights updated daily.</p>
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4 text-xs">Sections</h4>
              <ul className="space-y-2">
                <li><Link href="/markets" className="hover:text-white">Markets</Link></li>
-               <li><Link href="/markets" className="hover:text-white">Economy</Link></li>
-               <li><Link href="/markets" className="hover:text-white">Technology</Link></li>
+               <li><Link href="/campus" className="hover:text-white">Campus</Link></li>
+               <li><Link href="/policy" className="hover:text-white">Policy</Link></li>
                <li><Link href="/opinion" className="hover:text-white">Opinion</Link></li>
              </ul>
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4 text-xs">Legal</h4>
              <ul className="space-y-2">
-               <li><Link href="#" className="hover:text-white">Privacy Policy</Link></li>
-               <li><Link href="#" className="hover:text-white">Terms of Service</Link></li>
-               <li><Link href="#" className="hover:text-white">Copyright Policy</Link></li>
+               <li><Link href="/legal" className="hover:text-white">Disclaimer & Terms</Link></li>
              </ul>
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4 text-xs">Connect</h4>
              <ul className="space-y-2">
-               <li><Link href="#" className="hover:text-white">Twitter / X</Link></li>
-               <li><Link href="#" className="hover:text-white">LinkedIn</Link></li>
-               <li><Link href="#" className="hover:text-white">Instagram</Link></li>
+               <li><a href="https://x.com/oomarsalehh" target="_blank" rel="noopener noreferrer" className="hover:text-white">X (Twitter)</a></li>
+               <li><a href="https://www.linkedin.com/in/omarsaleh001" target="_blank" rel="noopener noreferrer" className="hover:text-white">LinkedIn</a></li>
              </ul>
            </div>
         </div>
         <div className="container mx-auto px-4 mt-12 pt-8 border-t border-zinc-900 text-center text-xs text-zinc-600">
-           © 2025 The Economics Students' Association at York University. All rights reserved.
+           &copy; {new Date().getFullYear()} The Keele Street Journal. All rights reserved.
         </div>
       </footer>
     </div>
