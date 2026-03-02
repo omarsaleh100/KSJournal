@@ -1,31 +1,29 @@
 import Link from "next/link";
 import { Search, Menu } from "lucide-react";
 
+const LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/the-ksj.firebasestorage.app/o/KSJ%20black.png?alt=media";
+
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        
+
         {/* Brand Identity */}
         <div className="flex items-center gap-4">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="flex items-center gap-3 group"
             aria-label="The Keele Street Journal Homepage"
           >
-            {/* Logo Placeholder */}
-            <div className="h-10 w-10 relative overflow-hidden rounded-sm bg-zinc-900 flex items-center justify-center text-white group-hover:bg-red-800 transition-colors">
-               <span className="font-serif font-bold text-lg">K</span>
-            </div>
-            
-            <div className="flex flex-col">
-              <span className="text-xl font-serif font-bold leading-none tracking-tight text-zinc-900 group-hover:text-red-800 transition-colors">
-                The Keele Street Journal
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium mt-1">
-                Powered by the ESA
-              </span>
-            </div>
+            <img
+              src={LOGO_URL}
+              alt="KSJ Logo"
+              className="h-10 w-10 object-contain"
+            />
+
+            <span className="text-xl font-serif font-bold leading-none tracking-tight text-zinc-900 group-hover:text-red-800 transition-colors">
+              The Keele Street Journal
+            </span>
           </Link>
         </div>
 

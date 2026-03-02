@@ -59,7 +59,35 @@ async function getArticleData(id: string) {
     }
   }
 
-  // Case 3: Opinion piece
+  // Case 3: Deep Dive analysis card
+  if (id.startsWith("deep-dive-")) {
+    try {
+      const index = parseInt(id.replace("deep-dive-", ""), 10);
+      const docSnap = await getDoc(doc(db, "daily_edition", "deep_dive"));
+      if (docSnap.exists()) {
+        const cards = docSnap.data()?.cards || [];
+        const card = cards[index];
+        if (card) {
+          return {
+            id: id,
+            category: "Market Deep Dive",
+            title: card.title,
+            subtitle: card.analysis,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            author: "AI Economist",
+            readTime: "4 min read",
+            content: card.content || [card.analysis],
+            keyPoints: card.keyPoints || [],
+            imageUrl: null,
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching deep dive:", error);
+    }
+  }
+
+  // Case 4: Opinion piece
   if (id.startsWith("opinion-")) {
     try {
       const index = parseInt(id.replace("opinion-", ""), 10);

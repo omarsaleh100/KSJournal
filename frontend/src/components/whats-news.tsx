@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface WhatsNewsProps {
   business: string[];
@@ -37,9 +38,9 @@ export function WhatsNews({ business, world }: WhatsNewsProps) {
       </div>
       
       <div className="mt-6 pt-4 border-t border-zinc-200">
-         <button className="flex items-center text-xs font-bold text-zinc-900 hover:text-red-800 transition-colors">
+         <Link href="/policy" className="flex items-center text-xs font-bold text-zinc-900 hover:text-red-800 transition-colors">
             Read the Full Briefing <ChevronRight className="w-3 h-3 ml-1" />
-         </button>
+         </Link>
       </div>
     </div>
   );

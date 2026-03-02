@@ -6,9 +6,39 @@ from app.genai_engine import generate_text
 YORK_FALLBACK = "https://www.yorku.ca/brand/wp-content/uploads/sites/18/2020/09/YorkU-VariHall-Summer.jpg"
 
 
+def _extract_best_img_from_html(html):
+    """Extract the best image from HTML content. Prefers <figure> featured images."""
+    if not html:
+        return None
+    soup = BeautifulSoup(html, "html.parser")
+    # 1. Prefer image inside a <figure> (typically the featured/primary image)
+    figure = soup.find("figure")
+    if figure:
+        img = figure.find("img")
+        if img:
+            # Prefer srcset's largest resolution, fall back to src
+            src = img.get("src", "")
+            srcset = img.get("srcset", "")
+            if srcset:
+                # srcset format: "url 300w, url 768w, url 1024w" — pick the largest
+                parts = [p.strip().split() for p in srcset.split(",") if p.strip()]
+                parts = [(p[0], int(p[1].replace("w", ""))) for p in parts if len(p) == 2 and p[1].endswith("w")]
+                if parts:
+                    parts.sort(key=lambda x: x[1], reverse=True)
+                    src = parts[0][0]
+            if src and "pixel" not in src:
+                return src
+    # 2. Fallback: first <img> tag that isn't a tracking pixel
+    img = soup.find("img")
+    if img and img.get("src") and "pixel" not in img["src"]:
+        return img["src"]
+    return None
+
+
 def get_image_from_entry(entry):
     """Try to extract a real image URL from an RSS feed entry."""
     try:
+        # 1. Standard RSS media extensions
         if "media_content" in entry:
             return entry.media_content[0]["url"]
         if "media_thumbnail" in entry:
@@ -17,17 +47,16 @@ def get_image_from_entry(entry):
             for link in entry.links:
                 if link.get("rel") == "enclosure" and "image" in link.get("type", ""):
                     return link.href
-        # Try parsing HTML content for <img> tags
-        content_html = ""
+        # 2. Parse full content HTML first (has featured images in <figure>)
         if "content" in entry:
-            content_html = entry.content[0].value
-        elif "summary" in entry:
-            content_html = entry.summary
-        if content_html:
-            soup = BeautifulSoup(content_html, "html.parser")
-            img = soup.find("img")
-            if img and img.get("src") and "pixel" not in img["src"]:
-                return img["src"]
+            url = _extract_best_img_from_html(entry.content[0].value)
+            if url:
+                return url
+        # 3. Fallback to summary HTML
+        if "summary" in entry:
+            url = _extract_best_img_from_html(entry.summary)
+            if url:
+                return url
     except Exception:
         pass
     return None

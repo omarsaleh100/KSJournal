@@ -51,7 +51,7 @@ def update_hero_and_featured():
         db.collection("daily_edition").document("hero_story").set({
             "lastUpdated": firestore.SERVER_TIMESTAMP,
             "type": "hero",
-            "imageUrl": get_image_with_fallback(hero_entry, hero_data.get("title", hero_entry.title)),
+            "imageUrl": get_image_with_fallback(hero_entry, hero_data.get("title", hero_entry.title), validate=True),
             **hero_data,
             "author": "The Editorial Board"
         })

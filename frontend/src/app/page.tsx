@@ -125,7 +125,9 @@ export default async function Home() {
                   <div key={idx} className={`border-t-2 ${idx === 0 ? 'border-red-700' : 'border-zinc-700'} pt-4`}>
                     <h3 className="text-lg font-serif font-bold mb-2 text-white">{card.title}</h3>
                     <p className="text-sm text-zinc-400 leading-relaxed mb-4">{card.analysis}</p>
-                    <span className="text-xs font-bold text-zinc-500 uppercase">Read Analysis →</span>
+                    <Link href={`/article/deep-dive-${idx}`} className="text-xs font-bold text-zinc-500 uppercase hover:text-red-500 transition-colors">
+                      Read Analysis →
+                    </Link>
                   </div>
                 ))}
                 <div className="bg-zinc-800 p-6 flex flex-col justify-center items-center text-center">
@@ -186,9 +188,14 @@ export default async function Home() {
         {/* SECTION 4: REAL GLOBAL BRIEFING */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12">
            <div className="md:col-span-8">
-              <div className="flex items-center gap-2 mb-6 border-b border-zinc-200 pb-2">
-                <TrendingUp className="w-5 h-5 text-red-800" />
-                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Global Briefing</h2>
+              <div className="flex items-center justify-between mb-6 border-b border-zinc-200 pb-2">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-red-800" />
+                  <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Global Briefing</h2>
+                </div>
+                <Link href="/policy" className="text-xs font-bold text-red-700 hover:text-red-900 uppercase tracking-wide">
+                  View All →
+                </Link>
               </div>
               <div className="space-y-6">
                 {globalData.map((item: any, i: number) => (

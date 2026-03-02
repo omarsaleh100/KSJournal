@@ -25,7 +25,7 @@ def update_opinions():
         print("   ⚠️ No headlines found. Using generic prompt.")
         headlines = "Global markets, trade policy, student economics, and technology trends."
 
-    # 2. Ask Gemini to generate 3 opinion teasers
+    # 2. Ask Gemini to generate 5 opinion columns
     prompt = f"""
     You are the Opinion Editor of 'The Keele Street Journal', an economics newspaper for York University students.
 
@@ -33,13 +33,15 @@ def update_opinions():
     {headlines}
 
     TASK:
-    Generate 3 provocative opinion columns inspired by today's news.
+    Generate 5 provocative opinion columns inspired by today's news.
     Each must take a clear editorial stance — be bold, not neutral.
 
     Voices (generate a realistic fictional name for each):
     1. A university economics professor (academic perspective)
     2. A student association president (student/young perspective)
     3. A financial analyst (market/industry perspective)
+    4. A central bank policy researcher (monetary policy perspective)
+    5. A tech startup founder (innovation/disruption perspective)
 
     For each opinion, write:
     - A provocative title
@@ -57,7 +59,7 @@ def update_opinions():
             "content": ["First paragraph...", "Second paragraph...", "Third paragraph..."],
             "keyPoints": ["Key argument 1", "Key argument 2"]
         }},
-        ... (3 items total)
+        ... (5 items total)
     ]
     """
 
@@ -71,9 +73,9 @@ def update_opinions():
     try:
         db.collection("daily_edition").document("opinions").set({
             "lastUpdated": firestore.SERVER_TIMESTAMP,
-            "items": result[:3]
+            "items": result[:5]
         })
-        print(f"   💾 Saved {len(result[:3])} opinion pieces to Firestore.")
+        print(f"   💾 Saved {len(result[:5])} opinion pieces to Firestore.")
     except Exception as e:
         print(f"   ❌ Database Error: {e}")
 

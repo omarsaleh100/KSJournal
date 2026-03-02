@@ -67,22 +67,30 @@ def generate_analysis(macro_text):
     TASK:
     1. Analyze the data above.
     2. Generate content for the "Market Deep Dive" section.
-    3. Specifically, create 3 short Analysis Cards and 1 Highlight Stat.
-    
+    3. Specifically, create 3 Analysis Cards and 1 Highlight Stat.
+    4. Each card needs a short summary AND full article content (2-3 paragraphs) for students who want to read more.
+    5. Each card also needs 2-3 key takeaway points.
+
     OUTPUT FORMAT (JSON):
     {{
         "cards": [
             {{
                 "title": "Short Analysis Title (e.g. 'Bond Yields Spike')",
-                "analysis": "Two sentences explaining what this means for Canadian students/investors."
+                "analysis": "Two sentences explaining what this means for Canadian students/investors.",
+                "content": ["First paragraph with detailed analysis...", "Second paragraph with implications...", "Third paragraph with outlook..."],
+                "keyPoints": ["Key takeaway 1", "Key takeaway 2"]
             }},
             {{
                 "title": "Title 2",
-                "analysis": "Analysis 2"
+                "analysis": "Analysis 2",
+                "content": ["...", "...", "..."],
+                "keyPoints": ["...", "..."]
             }},
             {{
                 "title": "Title 3",
-                "analysis": "Analysis 3"
+                "analysis": "Analysis 3",
+                "content": ["...", "...", "..."],
+                "keyPoints": ["...", "..."]
             }}
         ],
         "stat": {{

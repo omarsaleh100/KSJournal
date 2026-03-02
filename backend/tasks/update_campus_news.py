@@ -79,7 +79,7 @@ def fetch_and_curate():
     final_items = []
     for story in selected_stories[:4]:
         entry = entry_lookup.get(story.get("title"))
-        story["image"] = get_image_with_fallback(entry, story["title"])
+        story["image"] = get_image_with_fallback(entry, story["title"], validate=True)
         final_items.append(story)
         
     # 4. Save
