@@ -225,10 +225,10 @@ export default async function Home() {
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4 text-xs">Sections</h4>
              <ul className="space-y-2">
-               <li><Link href="#" className="hover:text-white">Markets</Link></li>
-               <li><Link href="#" className="hover:text-white">Economy</Link></li>
-               <li><Link href="#" className="hover:text-white">Technology</Link></li>
-               <li><Link href="#" className="hover:text-white">Opinion</Link></li>
+               <li><Link href="/markets" className="hover:text-white">Markets</Link></li>
+               <li><Link href="/markets" className="hover:text-white">Economy</Link></li>
+               <li><Link href="/markets" className="hover:text-white">Technology</Link></li>
+               <li><Link href="/opinion" className="hover:text-white">Opinion</Link></li>
              </ul>
            </div>
            <div>

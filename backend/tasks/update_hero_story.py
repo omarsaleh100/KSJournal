@@ -3,12 +3,12 @@ import google.generativeai as genai
 import os
 import sys
 import json
-import random
 from dotenv import load_dotenv
 from firebase_admin import firestore
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.db import db
+from app.image_utils import get_image_with_fallback
 
 load_dotenv()
 
@@ -18,20 +18,6 @@ model = genai.GenerativeModel('gemini-flash-latest')
 
 # Financial Post (Good for both Lead and Featured stories)
 RSS_URL = "https://financialpost.com/feed"
-
-FALLBACK_IMAGES = [
-    "https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=1920&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1920&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop",
-]
-
-def get_image_from_entry(entry):
-    if 'media_content' in entry: return entry.media_content[0]['url']
-    if 'media_thumbnail' in entry: return entry.media_thumbnail[0]['url']
-    if 'links' in entry:
-        for link in entry.links:
-            if 'image' in link.type: return link.href
-    return random.choice(FALLBACK_IMAGES)
 
 def update_hero_and_featured():
     print("📰 Starting 'Hero & Featured' production...")
@@ -65,7 +51,7 @@ def update_hero_and_featured():
         db.collection("daily_edition").document("hero_story").set({
             "lastUpdated": firestore.SERVER_TIMESTAMP,
             "type": "hero",
-            "imageUrl": get_image_from_entry(hero_entry),
+            "imageUrl": get_image_with_fallback(hero_entry, hero_data.get("title", hero_entry.title)),
             **hero_data,
             "author": "The Editorial Board"
         })

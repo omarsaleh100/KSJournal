@@ -31,10 +31,10 @@ export function Header() {
 
         {/* Navigation (Desktop) */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600" aria-label="Main Navigation">
-          <Link href="#" className="hover:text-zinc-900 transition-colors">Markets</Link>
-          <Link href="#" className="hover:text-zinc-900 transition-colors">Campus</Link>
-          <Link href="#" className="hover:text-zinc-900 transition-colors">Policy</Link>
-          <Link href="#" className="hover:text-zinc-900 transition-colors">Opinion</Link>
+          <Link href="/markets" className="hover:text-zinc-900 transition-colors">Markets</Link>
+          <Link href="/campus" className="hover:text-zinc-900 transition-colors">Campus</Link>
+          <Link href="/policy" className="hover:text-zinc-900 transition-colors">Policy</Link>
+          <Link href="/opinion" className="hover:text-zinc-900 transition-colors">Opinion</Link>
         </nav>
 
         {/* Actions */}

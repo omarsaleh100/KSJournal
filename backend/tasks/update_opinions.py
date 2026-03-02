@@ -33,7 +33,7 @@ def update_opinions():
     {headlines}
 
     TASK:
-    Generate 3 provocative opinion column teasers inspired by today's news.
+    Generate 3 provocative opinion columns inspired by today's news.
     Each must take a clear editorial stance — be bold, not neutral.
 
     Voices (generate a realistic fictional name for each):
@@ -41,13 +41,21 @@ def update_opinions():
     2. A student association president (student/young perspective)
     3. A financial analyst (market/industry perspective)
 
+    For each opinion, write:
+    - A provocative title
+    - A two-sentence snippet (teaser)
+    - Full content: 3-4 paragraphs arguing the opinion
+    - 2-3 key points summarizing the argument
+
     OUTPUT FORMAT (JSON array):
     [
         {{
             "title": "Provocative Opinion Title (max 10 words)",
             "author": "Dr. Full Name",
             "role": "Prof. of Macroeconomics",
-            "snippet": "Two punchy sentences summarizing the opinion's argument."
+            "snippet": "Two punchy sentences summarizing the opinion's argument.",
+            "content": ["First paragraph...", "Second paragraph...", "Third paragraph..."],
+            "keyPoints": ["Key argument 1", "Key argument 2"]
         }},
         ... (3 items total)
     ]

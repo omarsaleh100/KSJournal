@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.db import db
 from app.genai_engine import generate_json
 from app.scraper import fetch_feed
+from app.image_utils import get_image_with_fallback
 
 # Multiple RSS sources for diverse featured stories
 FEEDS = [
@@ -23,6 +24,7 @@ def update_featured_stories():
 
     # 1. Gather candidates from all feeds
     candidates = []
+    raw_entries = []  # Keep raw entries for image extraction
     for url in FEEDS:
         entries = fetch_feed(url, limit=3)
         for entry in entries:
@@ -31,6 +33,7 @@ def update_featured_stories():
                 "summary": getattr(entry, "summary", ""),
                 "source": url.split("/")[2],
             })
+            raw_entries.append(entry)
 
     if not candidates:
         print("   ❌ No RSS candidates found.")
@@ -56,6 +59,8 @@ def update_featured_stories():
     1. Select the 4 most diverse and impactful stories. Avoid picking two stories about the same topic.
     2. Assign each a category from: "Markets", "Economy", "Policy", "Tech", "Global Trade", "Energy", "Banking".
     3. Write a punchy, short title (max 12 words) and a one-sentence summary for each.
+    4. Write 3 paragraphs of article content for each story (informative, suitable for economics students).
+    5. Write 2-3 key takeaway points for each story.
 
     OUTPUT FORMAT (JSON array):
     [
@@ -64,6 +69,8 @@ def update_featured_stories():
             "category": "Markets",
             "title": "Short Punchy Title Here",
             "summary": "One clear sentence summarizing the story.",
+            "content": ["First paragraph...", "Second paragraph...", "Third paragraph..."],
+            "keyPoints": ["Key takeaway 1", "Key takeaway 2"],
             "date": "{today}",
             "author": "Staff"
         }},
@@ -77,9 +84,15 @@ def update_featured_stories():
         print("   ❌ AI failed to generate featured stories.")
         return
 
-    # Ensure correct IDs
+    # Ensure correct IDs and resolve images
+    # Build lookup from candidate title to raw entry for image extraction
+    entry_lookup = {c["title"]: raw_entries[i] for i, c in enumerate(candidates) if i < len(raw_entries)}
+
     for i, item in enumerate(result[:4]):
         item["id"] = f"featured-{i}"
+        # Find matching entry by title similarity
+        matching_entry = entry_lookup.get(item.get("title"))
+        item["imageUrl"] = get_image_with_fallback(matching_entry, item["title"])
 
     # 3. Save to Firestore
     try:

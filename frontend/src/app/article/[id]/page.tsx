@@ -48,9 +48,9 @@ async function getArticleData(id: string) {
             date: story.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             author: story.author || "Staff",
             readTime: "3 min read",
-            content: [story.summary],
-            keyPoints: [],
-            imageUrl: null,
+            content: story.content || [story.summary],
+            keyPoints: story.keyPoints || [],
+            imageUrl: story.imageUrl || null,
           };
         }
       }
@@ -76,8 +76,8 @@ async function getArticleData(id: string) {
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             author: opinion.author,
             readTime: "4 min read",
-            content: [opinion.snippet || ""],
-            keyPoints: [],
+            content: opinion.content || [opinion.snippet || ""],
+            keyPoints: opinion.keyPoints || [],
             imageUrl: null,
           };
         }
@@ -158,6 +158,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             </div>
           </div>
         </header>
+
+        {/* Hero Image */}
+        {article.imageUrl && (
+          <div className="mb-10 relative aspect-video w-full overflow-hidden bg-zinc-100 rounded-sm">
+            <img src={article.imageUrl} alt={article.title} className="object-cover w-full h-full" />
+          </div>
+        )}
 
         {/* Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">

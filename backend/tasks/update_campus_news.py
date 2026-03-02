@@ -3,13 +3,12 @@ import google.generativeai as genai
 import os
 import sys
 import json
-import urllib.parse
 from dotenv import load_dotenv
 from firebase_admin import firestore
-from bs4 import BeautifulSoup
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.db import db
+from app.image_utils import get_image_with_fallback
 
 load_dotenv()
 
@@ -22,40 +21,6 @@ RSS_URLS = [
     "https://news.yorku.ca/feed/",
 ]
 
-def generate_ai_image_url(title):
-    """Generates an image URL using Pollinations.ai"""
-    try:
-        print(f"         🎨 Generating AI illustration for: '{title[:20]}...'")
-        prompt = f"Write a 5-word visual description for an image representing this news headline: '{title}'. Use keywords like 'photorealistic', '4k', 'cinematic', 'university'. Output ONLY the 5-10 words."
-        res = model.generate_content(prompt)
-        image_prompt = res.text.strip()
-        encoded_prompt = urllib.parse.quote(image_prompt)
-        return f"https://image.pollinations.ai/prompt/{encoded_prompt}?nologo=true&width=1024&height=600&seed=42"
-    except:
-        return "https://www.yorku.ca/brand/wp-content/uploads/sites/18/2020/09/YorkU-VariHall-Summer.jpg"
-
-def get_real_image(entry):
-    """Tries to find a real image in the RSS feed."""
-    try:
-        if 'media_content' in entry: return entry.media_content[0]['url']
-        if 'media_thumbnail' in entry: return entry.media_thumbnail[0]['url']
-        if 'links' in entry:
-            for link in entry.links:
-                if link.get('rel') == 'enclosure' and 'image' in link.get('type', ''): return link.href
-        
-        content_html = ""
-        if 'content' in entry: content_html = entry.content[0].value
-        elif 'summary' in entry: content_html = entry.summary
-
-        if content_html:
-            soup = BeautifulSoup(content_html, 'html.parser')
-            img = soup.find('img')
-            if img and img.get('src') and 'pixel' not in img['src']:
-                return img['src']
-    except:
-        pass
-    return None
-
 def fetch_and_curate():
     print("   📡 Scanning York U Feeds...")
     USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)..."
@@ -66,10 +31,6 @@ def fetch_and_curate():
         try:
             feed = feedparser.parse(url, agent=USER_AGENT)
             for entry in feed.entries[:6]: # Check top 6
-                
-                # Get real image if it exists, otherwise leave None
-                real_img = get_real_image(entry)
-                
                 # Get Author
                 author = getattr(entry, 'author', 'Staff')
                 if "(" in author: author = author.split("(")[1].replace(")", "")
@@ -78,15 +39,18 @@ def fetch_and_curate():
                     "title": entry.title,
                     "link": entry.link,
                     "summary": entry.summary[:200],
-                    "image": real_img, # Might be None
-                    "author": author
+                    "image": None,  # Will be resolved after AI selection
+                    "author": author,
+                    "_entry": entry,  # Keep entry for image extraction later
                 })
         except Exception as e:
             print(f"      ❌ Feed error: {e}")
             
     # 2. Ask AI to pick the Top 4
     print("   🧠 AI Editor is selecting the best 4 stories...")
-    candidates_str = json.dumps(candidates)
+    # Strip non-serializable _entry before passing to AI
+    candidates_for_ai = [{k: v for k, v in c.items() if k != "_entry"} for c in candidates]
+    candidates_str = json.dumps(candidates_for_ai)
     
     prompt = f"""
     You are the Campus Editor.
@@ -108,15 +72,14 @@ def fetch_and_curate():
         print("❌ AI Selection Failed")
         return
 
-    # 3. NOW generate images ONLY for the 4 winners (if missing)
+    # 3. Resolve images for the 4 winners using shared image utils
+    # Build a lookup from title to original entry for image extraction
+    entry_lookup = {c["title"]: c.get("_entry") for c in candidates}
+
     final_items = []
     for story in selected_stories[:4]:
-        if not story.get("image"):
-            # Only generate if we don't have a real photo
-            story["image"] = generate_ai_image_url(story["title"])
-        else:
-            print(f"         ✅ Using real photo for: {story['title'][:20]}")
-            
+        entry = entry_lookup.get(story.get("title"))
+        story["image"] = get_image_with_fallback(entry, story["title"])
         final_items.append(story)
         
     # 4. Save
