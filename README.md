@@ -1,6 +1,6 @@
 # The Keele Street Journal
 
-An AI-powered daily financial newspaper built for York University's Economics Students' Association (ESA). Every morning, automated pipelines fetch live market data and global news, process them through Google's Gemini AI, and publish a fresh digital edition — no manual work required.
+An AI-powered daily financial newspaper built for York University's Economics enthusiasts. Every morning, automated pipelines fetch live market data and global news, process them through Google's Gemini AI, and publish a fresh digital edition — no manual work required.
 
 ## How It Works
 
@@ -188,6 +188,3 @@ The project uses GitHub Actions for automated daily publishing. To enable it:
 | `daily_edition` | `campus_news` | York University campus news |
 | `subscribers` | `{auto-id}` | Newsletter email subscriptions |
 
-## License
-
-Built by the Economics Students' Association at York University.
