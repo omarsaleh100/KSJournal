@@ -248,7 +248,7 @@ export default async function Home() {
            </div>
         </div>
         <div className="container mx-auto px-4 mt-12 pt-8 border-t border-zinc-900 text-center text-xs text-zinc-600">
-           &copy; {new Date().getFullYear()} The Keele Street Journal. All rights reserved.
+           &copy; 2025 The Keele Street Journal. All rights reserved.
         </div>
       </footer>
     </div>
