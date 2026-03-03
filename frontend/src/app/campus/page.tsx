@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Header } from "@/components/header";
 import { Users } from "lucide-react";
 import { SafeImage } from "@/components/safe-image";

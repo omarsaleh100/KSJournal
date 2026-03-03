@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Header } from "@/components/header";
 import { Ticker } from "@/components/ticker";
 import { NewsCard } from "@/components/news-card";

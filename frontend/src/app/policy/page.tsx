@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Header } from "@/components/header";
 import { NewsCard } from "@/components/news-card";
 import { TrendingUp } from "lucide-react";

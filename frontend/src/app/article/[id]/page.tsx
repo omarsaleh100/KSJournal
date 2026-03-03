@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Header } from "@/components/header";
 import { ArrowLeft, Clock } from "lucide-react";
 import { ShareButton } from "@/components/share-button";

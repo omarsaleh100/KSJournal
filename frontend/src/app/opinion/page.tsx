@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Header } from "@/components/header";
 import { Quote } from "lucide-react";
 import Link from "next/link";
