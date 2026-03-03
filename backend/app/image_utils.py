@@ -120,6 +120,8 @@ def validate_image_url(url):
     """Check if a URL actually resolves to an image (HEAD request)."""
     if not url:
         return False
+    if not url.startswith(("http://", "https://")):
+        return False
     try:
         resp = requests.head(url, timeout=5, allow_redirects=True)
         content_type = resp.headers.get("content-type", "")

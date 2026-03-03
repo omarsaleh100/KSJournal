@@ -9,6 +9,7 @@ import { BarChart3, TrendingUp, Users } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { CurrentDate } from "@/components/current-date";
+import { SafeImage } from "@/components/safe-image";
 
 async function getDailyEdition() {
   // Fetch ALL collections in parallel for speed
@@ -69,7 +70,7 @@ export default async function Home() {
             {heroData ? (
               <article className="mb-8 group cursor-pointer">
                 <div className="relative aspect-video w-full mb-4 overflow-hidden bg-zinc-100">
-                    <img src={heroData.imageUrl} alt="Hero" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
+                    <SafeImage src={heroData.imageUrl} alt="Hero" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-bold text-red-800 uppercase tracking-widest">Special Report</span>
@@ -156,8 +157,8 @@ export default async function Home() {
                     className="group cursor-pointer block"
                   >
                     <div className="h-32 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
-                        <img 
-                          src={item.image} 
+                        <SafeImage
+                          src={item.image}
                           alt={item.title}
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                         />

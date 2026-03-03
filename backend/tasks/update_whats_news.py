@@ -2,7 +2,6 @@ import feedparser
 import google.generativeai as genai
 import os
 import sys
-import datetime
 from dotenv import load_dotenv
 from firebase_admin import firestore
 

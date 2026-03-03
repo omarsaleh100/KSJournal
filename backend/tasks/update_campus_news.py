@@ -68,8 +68,8 @@ def fetch_and_curate():
     try:
         res = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
         selected_stories = json.loads(res.text)
-    except:
-        print("❌ AI Selection Failed")
+    except Exception as e:
+        print(f"❌ AI Selection Failed: {e}")
         return
 
     # 3. Resolve images for the 4 winners using shared image utils

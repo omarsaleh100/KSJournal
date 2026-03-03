@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Users } from "lucide-react";
+import { SafeImage } from "@/components/safe-image";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -34,13 +35,11 @@ export default async function CampusPage() {
                 className="group cursor-pointer block"
               >
                 <div className="h-40 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
-                  {item.image && (
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                    />
-                  )}
+                  <SafeImage
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
                 <span className="text-[10px] font-bold text-red-800 uppercase mb-1 block">
                   {item.category || "Campus"}

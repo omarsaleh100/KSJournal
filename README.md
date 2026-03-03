@@ -1,6 +1,6 @@
 # The Keele Street Journal
 
-An AI-powered daily financial newspaper built for York University's Economics enthusiasts. Every morning, automated pipelines fetch live market data and global news, process them through Google's Gemini AI, and publish a fresh digital edition — no manual work required.
+An AI-powered daily financial newspaper built for York University's Economics students. Every morning, automated pipelines fetch live market data and global news, process them through Google's Gemini AI, and publish a fresh digital edition — no manual work required.
 
 ## How It Works
 
@@ -23,11 +23,11 @@ Every day at 9:35 AM EST (after US market open), a GitHub Actions workflow runs 
 1. **Market Ticker** — Fetches live prices for S&P/TSX, S&P 500, Oil, CAD/USD, Bitcoin
 2. **What's News** — Summarizes top business & world headlines into WSJ-style bullets
 3. **Hero Story** — Generates a featured "Special Report" from the top financial headline
-4. **Featured Stories** — Curates 4 diverse stories from multiple news sources
-5. **Opinions** — Generates 3 editorial opinion teasers from different perspectives
+4. **Featured Stories** — Curates 4 diverse stories with full article content and images
+5. **Opinions** — Generates 5 editorial opinions from fictional columnist perspectives
 6. **Market Deep Dive** — Analyzes macro indicators (10Y yield, VIX, CAD/USD, Oil, TSX)
 7. **Global Briefing** — Selects top 3 geopolitical stories with economic impact analysis
-8. **Campus News** — Aggregates York University news with AI-generated images for missing photos
+8. **Campus News** — Aggregates York University news from YFile RSS with image extraction
 
 ## Tech Stack
 
@@ -35,37 +35,38 @@ Every day at 9:35 AM EST (after US market open), a GitHub Actions workflow runs 
 - **Next.js 16** with React 19 and React Server Components
 - **TypeScript** with strict mode
 - **Tailwind CSS 4** with custom serif newspaper typography
-- **Framer Motion** for animations
-- **Firebase SDK** for real-time Firestore reads
+- **Firebase SDK** for Firestore reads
 
 ### Backend
 - **Python 3.11+** task scripts (no server required for daily updates)
 - **FastAPI** for manual trigger endpoint and health checks
 - **Google Gemini AI** (`gemini-flash-latest`) for content generation
 - **yfinance** for real-time market data
-- **feedparser** for RSS feed parsing
+- **feedparser + BeautifulSoup** for RSS feed parsing and image extraction
 - **Firebase Admin SDK** for authenticated Firestore writes
 
 ### Infrastructure
 - **Google Cloud Firestore** — Document database for all content
 - **GitHub Actions** — Scheduled daily automation (cron)
-- **Vercel** — Frontend deployment (recommended)
+- **Vercel** — Frontend deployment
 
 ## Project Structure
 
 ```
 KSJournal/
 ├── .github/workflows/
-│   └── daily-update.yml        # Cron job: runs all tasks daily at 9:35 AM EST
+│   └── daily-update.yml          # Cron job: runs all tasks daily at 9:35 AM EST
 ├── backend/
 │   ├── app/
-│   │   ├── db.py               # Firebase Admin initialization
-│   │   ├── genai_engine.py     # Shared Gemini AI helpers
-│   │   ├── scraper.py          # Shared RSS feed fetching
-│   │   └── main.py             # FastAPI app (health check + manual trigger)
+│   │   ├── __init__.py
+│   │   ├── db.py                 # Firebase Admin initialization
+│   │   ├── genai_engine.py       # Shared Gemini AI helpers
+│   │   ├── image_utils.py        # Image extraction, validation, and stock fallbacks
+│   │   ├── scraper.py            # Shared RSS feed fetching
+│   │   └── main.py               # FastAPI app (health check + manual trigger)
 │   ├── tasks/
-│   │   ├── run_daily.py        # Master orchestrator (runs all tasks)
-│   │   ├── update_ticker.py    # Market ticker data
+│   │   ├── run_daily.py          # Master orchestrator (runs all tasks)
+│   │   ├── update_ticker.py      # Market ticker data
 │   │   ├── update_whats_news.py
 │   │   ├── update_hero_story.py
 │   │   ├── update_featured_stories.py
@@ -74,13 +75,20 @@ KSJournal/
 │   │   ├── update_global_briefing.py
 │   │   └── update_campus_news.py
 │   ├── requirements.txt
-│   └── .env                    # GEMINI_API_KEY, FIREBASE_PROJECT_ID
+│   └── .env                      # GEMINI_API_KEY (not committed)
 ├── frontend/
+│   ├── public/
+│   │   └── ksj-logo.png          # KSJ logo
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx        # Homepage (fetches all Firestore data)
-│   │   │   └── article/[id]/page.tsx
+│   │   │   ├── page.tsx          # Homepage (fetches all Firestore data)
+│   │   │   ├── article/[id]/page.tsx  # Dynamic article pages
+│   │   │   ├── markets/page.tsx  # Markets section page
+│   │   │   ├── campus/page.tsx   # Campus section page
+│   │   │   ├── policy/page.tsx   # Policy section page
+│   │   │   ├── opinion/page.tsx  # Opinion section page
+│   │   │   └── legal/page.tsx    # Legal disclaimer
 │   │   ├── components/
 │   │   │   ├── header.tsx
 │   │   │   ├── ticker.tsx
@@ -89,15 +97,28 @@ KSJournal/
 │   │   │   ├── opinion-column.tsx
 │   │   │   ├── newsletter-form.tsx
 │   │   │   ├── current-date.tsx
-│   │   │   └── ui/             # shadcn/ui components
+│   │   │   └── safe-image.tsx    # Client-side image with error fallback
 │   │   └── lib/
-│   │       ├── firebase.ts     # Firebase client SDK init
-│   │       └── utils.ts        # cn() class utility
+│   │       ├── firebase.ts       # Firebase client SDK init
+│   │       └── utils.ts          # cn() class utility
 │   ├── package.json
-│   └── .env.local              # Firebase client config
-├── firebase.rules              # Firestore security rules
+│   └── .env.local                # Firebase client config (not committed)
+├── firebase.rules                # Firestore security rules
+├── .gitignore
 └── README.md
 ```
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage with hero story, featured stories, market ticker, opinions, campus news |
+| `/markets` | Market deep dive analysis, ticker data, market-related stories |
+| `/campus` | York University campus news grid |
+| `/policy` | Global briefing and policy-related stories |
+| `/opinion` | All editorial opinion pieces |
+| `/article/[id]` | Full article view (hero, featured-N, deep-dive-N, opinion-N) |
+| `/legal` | AI content disclaimer and attribution |
 
 ## Setup
 
@@ -174,17 +195,31 @@ The project uses GitHub Actions for automated daily publishing. To enable it:
 3. The workflow runs automatically at 9:35 AM EST every day
 4. You can also trigger it manually from the **Actions** tab
 
-## Firestore Collections
+## Firestore Schema
 
 | Collection | Document | Description |
 |-----------|----------|-------------|
 | `system` | `market_ticker` | Live stock prices and changes |
 | `daily_edition` | `whats_news` | Business & world news bullets |
-| `daily_edition` | `hero_story` | Main featured article |
-| `daily_edition` | `featured_stories` | 4 curated story cards |
-| `daily_edition` | `opinions` | 3 editorial opinion teasers |
-| `daily_edition` | `deep_dive` | Macro economic analysis cards |
+| `daily_edition` | `hero_story` | Main featured article with full content |
+| `daily_edition` | `featured_stories` | 4 curated stories with content, keyPoints, images |
+| `daily_edition` | `opinions` | 5 editorial opinions with full content and keyPoints |
+| `daily_edition` | `deep_dive` | Macro economic analysis with content and keyPoints |
 | `daily_edition` | `global_briefing` | Top 3 geopolitical stories |
-| `daily_edition` | `campus_news` | York University campus news |
+| `daily_edition` | `campus_news` | York University campus news with images |
 | `subscribers` | `{auto-id}` | Newsletter email subscriptions |
 
+## Image Handling
+
+Images are sourced in priority order:
+1. **RSS feed images** — Extracted from `media:content`, `media:thumbnail`, enclosures, or HTML content
+2. **URL validation** — Each image URL is verified with a HEAD request before use
+3. **Stock photo fallback** — If no valid image is found, a curated Unsplash stock photo is selected based on article category using deterministic hashing
+
+## Security
+
+- Firestore rules restrict writes to the `subscribers` collection only (email + timestamp)
+- All other collections are read-only from the client
+- Backend CORS is restricted to the production domain
+- Image URL validation includes SSRF protection (HTTP/HTTPS only)
+- No secrets or credentials are committed to the repository

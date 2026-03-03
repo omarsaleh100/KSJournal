@@ -1,9 +1,10 @@
 import { Header } from "@/components/header";
-import { ArrowLeft, Share2, Printer, Bookmark, Clock } from "lucide-react"; // Removed Ticker import
+import { ArrowLeft, Share2, Printer, Bookmark, Clock } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/firebase"; 
 import { doc, getDoc } from "firebase/firestore";
+import { SafeImage } from "@/components/safe-image";
 
 // --- FETCH DATA FUNCTION ---
 async function getArticleData(id: string) {
@@ -190,7 +191,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         {/* Hero Image */}
         {article.imageUrl && (
           <div className="mb-10 relative aspect-video w-full overflow-hidden bg-zinc-100 rounded-sm">
-            <img src={article.imageUrl} alt={article.title} className="object-cover w-full h-full" />
+            <SafeImage src={article.imageUrl} alt={article.title} className="object-cover w-full h-full" />
           </div>
         )}
 
