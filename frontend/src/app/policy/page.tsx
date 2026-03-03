@@ -3,6 +3,7 @@ import { NewsCard } from "@/components/news-card";
 import { TrendingUp } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { slugify } from "@/lib/utils";
 
 const POLICY_CATEGORIES = ["Policy", "Global Trade"];
 
@@ -13,9 +14,9 @@ async function getPolicyData() {
   ]);
 
   const allFeatured = featuredSnap.exists() ? featuredSnap.data()?.items || [] : [];
-  const policyStories = allFeatured.filter((s: any) =>
-    POLICY_CATEGORIES.includes(s.category)
-  );
+  const policyStories = allFeatured
+    .map((s: any, i: number) => ({ ...s, originalIndex: i }))
+    .filter((s: any) => POLICY_CATEGORIES.includes(s.category));
 
   return {
     globalData: globalSnap.exists() ? globalSnap.data()?.items || [] : [],
@@ -72,7 +73,7 @@ export default async function PolicyPage() {
               {policyStories.map((story: any, i: number) => (
                 <NewsCard
                   key={i}
-                  id={story.id || `featured-${i}`}
+                  id={`featured-${story.originalIndex ?? i}-${slugify(story.title)}`}
                   category={story.category}
                   title={story.title}
                   summary={story.summary}

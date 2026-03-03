@@ -1,6 +1,7 @@
 import { Header } from "@/components/header";
 import { Quote } from "lucide-react";
 import Link from "next/link";
+import { slugify } from "@/lib/utils";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -34,7 +35,7 @@ export default async function OpinionPage() {
                   </span>
                 </div>
 
-                <Link href={`/article/opinion-${i}`} className="group">
+                <Link href={`/article/opinion-${i}-${slugify(op.title)}`} className="group">
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-zinc-900 leading-tight group-hover:text-red-800 transition-colors mb-3">
                     {op.title}
                   </h2>

@@ -10,6 +10,7 @@ import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { CurrentDate } from "@/components/current-date";
 import { SafeImage } from "@/components/safe-image";
+import { slugify } from "@/lib/utils";
 
 async function getDailyEdition() {
   // Fetch ALL collections in parallel for speed
@@ -74,7 +75,7 @@ export default async function Home() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-bold text-red-800 uppercase tracking-widest">Special Report</span>
-                  <Link href="/article/hero">
+                  <Link href={`/article/hero-${slugify(heroData.title)}`}>
                     <h1 className="text-3xl md:text-4xl font-serif font-bold text-zinc-900 leading-tight group-hover:text-red-800 transition-colors">
                       {heroData.title}
                     </h1>
@@ -92,7 +93,7 @@ export default async function Home() {
                {featuredData.length > 0 ? featuredData.map((news: any, i: number) => (
                  <NewsCard
                     key={i}
-                    id={`featured-${i}`} // We'll handle this ID later if needed
+                    id={`featured-${i}-${slugify(news.title)}`}
                     category={news.category}
                     title={news.title}
                     summary={news.summary}
@@ -126,7 +127,7 @@ export default async function Home() {
                   <div key={idx} className={`border-t-2 ${idx === 0 ? 'border-red-700' : 'border-zinc-700'} pt-4`}>
                     <h3 className="text-lg font-serif font-bold mb-2 text-white">{card.title}</h3>
                     <p className="text-sm text-zinc-400 leading-relaxed mb-4">{card.analysis}</p>
-                    <Link href={`/article/deep-dive-${idx}`} className="text-xs font-bold text-zinc-500 uppercase hover:text-red-500 transition-colors">
+                    <Link href={`/article/deep-dive-${idx}-${slugify(card.title)}`} className="text-xs font-bold text-zinc-500 uppercase hover:text-red-500 transition-colors">
                       Read Analysis →
                     </Link>
                   </div>

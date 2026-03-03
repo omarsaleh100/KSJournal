@@ -1,15 +1,23 @@
 import { Header } from "@/components/header";
-import { ArrowLeft, Share2, Printer, Bookmark, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
+import { ShareButton } from "@/components/share-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/firebase"; 
 import { doc, getDoc } from "firebase/firestore";
 import { SafeImage } from "@/components/safe-image";
 
+// Parse index from slug like "featured-0-some-title" or legacy "featured-0"
+function parseIndex(id: string, prefix: string): number {
+  const rest = id.slice(prefix.length);
+  const match = rest.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : -1;
+}
+
 // --- FETCH DATA FUNCTION ---
 async function getArticleData(id: string) {
   // Case 1: The "Hero" Story (Live from Database)
-  if (id === "hero") {
+  if (id === "hero" || id.startsWith("hero-")) {
     try {
       const docSnap = await getDoc(doc(db, "daily_edition", "hero_story"));
       if (docSnap.exists()) {
@@ -35,7 +43,7 @@ async function getArticleData(id: string) {
   // Case 2: Featured Story
   if (id.startsWith("featured-")) {
     try {
-      const index = parseInt(id.replace("featured-", ""), 10);
+      const index = parseIndex(id, "featured-");
       const docSnap = await getDoc(doc(db, "daily_edition", "featured_stories"));
       if (docSnap.exists()) {
         const items = docSnap.data()?.items || [];
@@ -63,7 +71,7 @@ async function getArticleData(id: string) {
   // Case 3: Deep Dive analysis card
   if (id.startsWith("deep-dive-")) {
     try {
-      const index = parseInt(id.replace("deep-dive-", ""), 10);
+      const index = parseIndex(id, "deep-dive-");
       const docSnap = await getDoc(doc(db, "daily_edition", "deep_dive"));
       if (docSnap.exists()) {
         const cards = docSnap.data()?.cards || [];
@@ -91,7 +99,7 @@ async function getArticleData(id: string) {
   // Case 4: Opinion piece
   if (id.startsWith("opinion-")) {
     try {
-      const index = parseInt(id.replace("opinion-", ""), 10);
+      const index = parseIndex(id, "opinion-");
       const docSnap = await getDoc(doc(db, "daily_edition", "opinions"));
       if (docSnap.exists()) {
         const items = docSnap.data()?.items || [];
@@ -128,8 +136,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   return (
     <div className="min-h-screen bg-white font-sans text-zinc-900">
       <Header />
-      {/* Ticker Removed from here */}
-
       <main className="container mx-auto px-4 py-12 max-w-5xl">
         
         {/* Breadcrumb */}
@@ -174,17 +180,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-all" aria-label="Bookmark this article">
-                <Bookmark className="w-5 h-5" aria-hidden="true" />
-              </button>
-              <button className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-all" aria-label="Share this article">
-                <Share2 className="w-5 h-5" aria-hidden="true" />
-              </button>
-              <button className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-all" aria-label="Print this article">
-                <Printer className="w-5 h-5" aria-hidden="true" />
-              </button>
-            </div>
+            <ShareButton />
           </div>
         </header>
 

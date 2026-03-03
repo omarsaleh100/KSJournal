@@ -21,6 +21,9 @@ out/
 .DS_Store
 Thumbs.db
 
+# Firebase
+.firebase/
+
 # IDE
 .idea/
 .vscode/

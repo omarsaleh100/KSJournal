@@ -4,6 +4,7 @@ import { BarChart3, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { slugify } from "@/lib/utils";
 
 const MARKET_CATEGORIES = ["Markets", "Economy", "Banking", "Energy", "Tech"];
 
@@ -15,9 +16,9 @@ async function getMarketsData() {
   ]);
 
   const allFeatured = featuredSnap.exists() ? featuredSnap.data()?.items || [] : [];
-  const marketStories = allFeatured.filter((s: any) =>
-    MARKET_CATEGORIES.includes(s.category)
-  );
+  const marketStories = allFeatured
+    .map((s: any, i: number) => ({ ...s, originalIndex: i }))
+    .filter((s: any) => MARKET_CATEGORIES.includes(s.category));
 
   return {
     deepDiveData: deepDiveSnap.exists() ? deepDiveSnap.data() : null,
@@ -71,7 +72,7 @@ export default async function MarketsPage() {
                   <div key={idx} className={`border-t-2 ${idx === 0 ? "border-red-700" : "border-zinc-700"} pt-4`}>
                     <h3 className="text-lg font-serif font-bold mb-2 text-white">{card.title}</h3>
                     <p className="text-sm text-zinc-400 leading-relaxed mb-4">{card.analysis}</p>
-                    <Link href={`/article/deep-dive-${idx}`} className="text-xs font-bold text-zinc-500 uppercase hover:text-red-500 transition-colors">
+                    <Link href={`/article/deep-dive-${idx}-${slugify(card.title)}`} className="text-xs font-bold text-zinc-500 uppercase hover:text-red-500 transition-colors">
                       Read Analysis →
                     </Link>
                   </div>
@@ -98,7 +99,7 @@ export default async function MarketsPage() {
               {marketStories.map((story: any, i: number) => (
                 <NewsCard
                   key={i}
-                  id={story.id || `featured-${i}`}
+                  id={`featured-${story.originalIndex ?? i}-${slugify(story.title)}`}
                   category={story.category}
                   title={story.title}
                   summary={story.summary}

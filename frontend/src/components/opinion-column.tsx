@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Quote } from "lucide-react";
+import { slugify } from "@/lib/utils";
 
 interface Opinion {
   title: string;
@@ -29,7 +30,7 @@ export function OpinionColumn({ opinions = [] }: { opinions?: Opinion[] }) {
              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">
                {op.author}
              </span>
-             <Link href={`/article/opinion-${i}`} className="group">
+             <Link href={`/article/opinion-${i}-${slugify(op.title)}`} className="group">
                <h3 className="text-sm font-serif font-bold text-zinc-900 leading-tight group-hover:text-red-800 transition-colors mb-1">
                  {op.title}
                </h3>
