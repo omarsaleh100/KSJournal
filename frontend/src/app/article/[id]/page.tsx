@@ -1,4 +1,4 @@
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 import { Header } from "@/components/header";
 import { ArrowLeft, Clock } from "lucide-react";
