@@ -43,6 +43,12 @@ def update_opinions():
     4. A central bank policy researcher (monetary policy perspective)
     5. A tech startup founder (innovation/disruption perspective)
 
+    IMPORTANT for the "role" field:
+    - NEVER include a specific company, firm, or organization name in the role.
+    - Use generic titles like "Equities Analyst", "Tech CEO", "Senior Policy Researcher", "Fintech Founder", "Prof. of Macroeconomics".
+    - BAD examples: "CEO of NeoGrid Systems", "Senior Analyst at Meridian Capital", "Director at GlobalTech Inc.", "ESA President"
+    - GOOD examples: "Senior Equities Analyst", "Tech Startup CEO", "Policy Researcher", "Prof. of Microeconomics"
+
     For each opinion, write:
     - A provocative title
     - A two-sentence snippet (teaser)
