@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "The Keele Street Journal",
-  description: "AI-powered financial newspaper for York University's Economics Students' Association. Market analysis, campus news, and economic insights updated daily.",
+  description: "AI-powered financial newspaper for York University's Economics Students. Market analysis, campus news, and economic insights updated daily.",
 };
 
 export default function RootLayout({

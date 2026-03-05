@@ -3,6 +3,7 @@ import google.generativeai as genai
 import os
 import sys
 import json
+import re
 from dotenv import load_dotenv
 from firebase_admin import firestore
 
@@ -38,7 +39,7 @@ def fetch_and_curate():
                 candidates.append({
                     "title": entry.title,
                     "link": entry.link,
-                    "summary": entry.summary[:200],
+                    "summary": re.sub(r'<[^>]+>', '', entry.summary)[:200],
                     "image": None,  # Will be resolved after AI selection
                     "author": author,
                     "_entry": entry,  # Keep entry for image extraction later
