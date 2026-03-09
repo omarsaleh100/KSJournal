@@ -58,13 +58,13 @@ def fetch_and_curate():
     Raw Articles: {candidates_str}
     
     TASK:
-    1. Select the best 4 stories for students.
+    1. Select the best 3 stories for students.
     2. Keep all fields (link, image, author) exactly as is.
     3. If 'image' is null, keep it null (we will fix it later).
-    
+
     OUTPUT JSON Array: [ {{ ... }} ]
     """
-    
+
     selected_stories = []
     try:
         res = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
@@ -73,12 +73,12 @@ def fetch_and_curate():
         print(f"❌ AI Selection Failed: {e}")
         return
 
-    # 3. Resolve images for the 4 winners using shared image utils
+    # 3. Resolve images for the 3 winners using shared image utils
     # Build a lookup from title to original entry for image extraction
     entry_lookup = {c["title"]: c.get("_entry") for c in candidates}
 
     final_items = []
-    for story in selected_stories[:4]:
+    for story in selected_stories[:3]:
         entry = entry_lookup.get(story.get("title"))
         story["image"] = get_image_with_fallback(entry, story["title"], category="campus", validate=True)
         final_items.append(story)

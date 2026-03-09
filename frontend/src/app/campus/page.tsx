@@ -28,7 +28,7 @@ export default async function CampusPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {campusData.length > 0 ? (
-            campusData.map((item: any, i: number) => (
+            campusData.slice(0, 3).map((item: any, i: number) => (
               <a
                 key={i}
                 href={item.link}
@@ -64,6 +64,35 @@ export default async function CampusPage() {
           ) : (
             <p className="text-zinc-400 col-span-full">No campus stories available.</p>
           )}
+
+          {/* Fixed Blunt Card */}
+          <a
+            href="https://blunt.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group cursor-pointer block"
+          >
+            <div className="h-40 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+              <SafeImage
+                src="/blunt-banner.png"
+                alt="Blunt"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline mb-2">
+              Software company Blunt assigns value to anything imaginable
+            </h3>
+            <p className="text-xs text-zinc-500 line-clamp-2 mb-2">
+              Blunt builds software that assigns value to anything imaginable — from ideas and assets to opportunities and impact.
+            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold text-zinc-500 uppercase">
+                BLUNT
+              </span>
+              <span className="text-[9px] text-zinc-300">|</span>
+              <span className="text-[9px] text-zinc-400">Source: blunt.ai</span>
+            </div>
+          </a>
         </div>
       </main>
     </div>

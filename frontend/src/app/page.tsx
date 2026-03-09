@@ -151,12 +151,12 @@ export default async function Home() {
                 <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Campus & Career</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {campusData.length > 0 ? campusData.map((item: any, i: number) => (
-                  <a 
-                    key={i} 
-                    href={item.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                {campusData.length > 0 ? campusData.slice(0, 3).map((item: any, i: number) => (
+                  <a
+                    key={i}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group cursor-pointer block"
                   >
                     <div className="h-32 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
@@ -173,8 +173,7 @@ export default async function Home() {
                     <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline">
                       {item.title}
                     </h3>
-                    
-                    {/* UPDATED: Show Author and Source */}
+
                     <div className="flex items-center gap-2 mt-2">
                       <span className="text-[9px] font-bold text-zinc-500 uppercase">
                         {item.author || "Staff"}
@@ -186,6 +185,34 @@ export default async function Home() {
                     </div>
                   </a>
                 )) : <p>Loading campus news...</p>}
+
+                {/* Fixed Blunt Card */}
+                <a
+                  href="https://blunt.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group cursor-pointer block"
+                >
+                  <div className="h-32 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+                    <SafeImage
+                      src="/blunt-banner.png"
+                      alt="Blunt"
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline">
+                    Software company Blunt assigns value to anything imaginable
+                  </h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase">
+                      BLUNT
+                    </span>
+                    <span className="text-[9px] text-zinc-300">|</span>
+                    <span className="text-[9px] text-zinc-400">
+                      Source: blunt.ai
+                    </span>
+                  </div>
+                </a>
             </div>
           </section>
 
