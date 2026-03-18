@@ -22,6 +22,7 @@ TASKS = [
     ("Deep Dive",           "update_deep_dive.py"),
     ("Global Briefing",     "update_global_briefing.py"),
     ("Campus News",         "update_campus_news.py"),
+    ("Newsletter Email",    "send_newsletter.py"),
 ]
 
 

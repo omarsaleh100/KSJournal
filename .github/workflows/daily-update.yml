@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > backend/.env
           echo "FIREBASE_PROJECT_ID=the-ksj" >> backend/.env
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> backend/.env
 
       - name: Run daily update
         run: python backend/tasks/run_daily.py

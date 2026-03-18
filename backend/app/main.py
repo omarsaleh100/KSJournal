@@ -6,7 +6,7 @@ import os
 
 app = FastAPI(title="KSJournal API", version="1.0.0")
 
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://ksjournal.vercel.app").split(",")
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://theksj.com,https://www.theksj.com,https://theksj.vercel.app").split(",")
 
 app.add_middleware(
     CORSMiddleware,
