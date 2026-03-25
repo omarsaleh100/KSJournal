@@ -5,7 +5,7 @@ Reads today's content from Firestore, builds an HTML email, sends via Resend.
 """
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -248,6 +248,36 @@ def build_email_html(content: dict) -> str:
 </html>"""
 
 
+def check_content_freshness() -> bool:
+    """Verify that key content was updated today before sending the newsletter."""
+    today = datetime.now(timezone.utc).date()
+
+    # Check a few critical sections — if these are stale, don't send
+    critical_docs = [
+        ("daily_edition", "hero_story"),
+        ("daily_edition", "whats_news"),
+    ]
+
+    for collection, doc_id in critical_docs:
+        snap = db.collection(collection).document(doc_id).get()
+        if not snap.exists:
+            print(f"❌ Content missing: {collection}/{doc_id}")
+            return False
+
+        data = snap.to_dict()
+        last_updated = data.get("lastUpdated")
+        if last_updated is None:
+            print(f"⚠️ No lastUpdated on {collection}/{doc_id} — skipping freshness check")
+            continue
+
+        if last_updated.date() != today:
+            print(f"❌ Stale content: {collection}/{doc_id} last updated {last_updated.date()}, expected {today}")
+            return False
+
+    print("✅ Content freshness check passed — all sections updated today")
+    return True
+
+
 def send_newsletter():
     api_key = os.getenv("RESEND_API_KEY")
     if not api_key:
@@ -256,7 +286,12 @@ def send_newsletter():
 
     resend.api_key = api_key
 
-    # 1. Get subscribers
+    # 1. Verify content is fresh before sending
+    if not check_content_freshness():
+        print("🚫 Newsletter NOT sent — content is outdated. Check the content generation job.")
+        sys.exit(1)
+
+    # 2. Get subscribers
     subscribers = get_subscribers()
     if not subscribers:
         print("⚠️ No subscribers found — skipping")
@@ -264,15 +299,15 @@ def send_newsletter():
 
     print(f"📬 Found {len(subscribers)} subscriber(s)")
 
-    # 2. Get today's content
+    # 3. Get today's content
     content = get_daily_content()
     print("📰 Fetched daily content from Firestore")
 
-    # 3. Build email
+    # 4. Build email
     html = build_email_html(content)
     today = datetime.now().strftime("%B %d, %Y")
 
-    # 4. Send via Resend (batch — up to 100 per call)
+    # 5. Send via Resend
     # Send individually to keep subscriber emails private (no CC/BCC exposure)
     success = 0
     failed = 0
