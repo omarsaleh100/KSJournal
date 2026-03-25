@@ -30,13 +30,13 @@ export default async function PolicyPage() {
   const { globalData, policyStories } = await getPolicyData();
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100">
       <Header />
 
       <main className="container mx-auto px-4 py-12">
-        <div className="border-b border-zinc-900 mb-8 pb-2">
+        <div className="border-b border-zinc-900 dark:border-zinc-100 mb-8 pb-2">
           <h1 className="text-3xl font-serif font-bold flex items-center gap-3">
-            <TrendingUp className="w-7 h-7 text-red-800" />
+            <TrendingUp className="w-7 h-7 text-red-800 dark:text-red-400" />
             Policy & Global
           </h1>
         </div>
@@ -44,20 +44,20 @@ export default async function PolicyPage() {
         {/* Global Briefing */}
         {globalData.length > 0 && (
           <section className="mb-12">
-            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 mb-6 border-b border-zinc-200 pb-2">
+            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100 mb-6 border-b border-zinc-200 dark:border-zinc-700 pb-2">
               Global Briefing
             </h2>
             <div className="space-y-6">
               {globalData.map((item: any, i: number) => (
                 <div key={i} className="flex gap-4 group">
-                  <span className="text-2xl font-bold text-zinc-200 group-hover:text-red-800 transition-colors font-serif">
+                  <span className="text-2xl font-bold text-zinc-200 dark:text-zinc-700 group-hover:text-red-800 dark:group-hover:text-red-400 transition-colors font-serif">
                     0{i + 1}
                   </span>
                   <div>
-                    <h3 className="text-lg font-bold font-serif text-zinc-900 mb-1 group-hover:text-red-800 transition-colors">
+                    <h3 className="text-lg font-bold font-serif text-zinc-900 dark:text-zinc-100 mb-1 group-hover:text-red-800 dark:group-hover:text-red-400 transition-colors">
                       {item.headline}
                     </h3>
-                    <p className="text-sm text-zinc-600 leading-relaxed">{item.context}</p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{item.context}</p>
                   </div>
                 </div>
               ))}
@@ -68,7 +68,7 @@ export default async function PolicyPage() {
         {/* Policy-Related Featured Stories */}
         {policyStories.length > 0 && (
           <section>
-            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 mb-6 border-b border-zinc-200 pb-2">
+            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100 mb-6 border-b border-zinc-200 dark:border-zinc-700 pb-2">
               Related Stories
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

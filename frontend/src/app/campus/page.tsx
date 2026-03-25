@@ -15,13 +15,13 @@ export default async function CampusPage() {
   const campusData = await getCampusData();
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100">
       <Header />
 
       <main className="container mx-auto px-4 py-12">
-        <div className="border-b border-zinc-900 mb-8 pb-2">
+        <div className="border-b border-zinc-900 dark:border-zinc-100 mb-8 pb-2">
           <h1 className="text-3xl font-serif font-bold flex items-center gap-3">
-            <Users className="w-7 h-7 text-red-800" />
+            <Users className="w-7 h-7 text-red-800 dark:text-red-400" />
             Campus & Career
           </h1>
         </div>
@@ -36,33 +36,33 @@ export default async function CampusPage() {
                 rel="noopener noreferrer"
                 className="group cursor-pointer block"
               >
-                <div className="h-40 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+                <div className="h-40 bg-zinc-100 dark:bg-zinc-800 mb-3 relative overflow-hidden rounded-sm">
                   <SafeImage
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <span className="text-[10px] font-bold text-red-800 uppercase mb-1 block">
+                <span className="text-[10px] font-bold text-red-800 dark:text-red-400 uppercase mb-1 block">
                   {item.category || "Campus"}
                 </span>
-                <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline mb-2">
+                <h3 className="text-sm font-bold font-serif text-zinc-900 dark:text-zinc-100 leading-tight group-hover:underline mb-2">
                   {item.title}
                 </h3>
-                <p className="text-xs text-zinc-500 line-clamp-2 mb-2">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mb-2">
                   {item.summary}
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-zinc-500 uppercase">
+                  <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase">
                     {item.author || "Staff"}
                   </span>
-                  <span className="text-[9px] text-zinc-300">|</span>
-                  <span className="text-[9px] text-zinc-400">Source: YFile</span>
+                  <span className="text-[9px] text-zinc-300 dark:text-zinc-600">|</span>
+                  <span className="text-[9px] text-zinc-400 dark:text-zinc-500">Source: YFile</span>
                 </div>
               </a>
             ))
           ) : (
-            <p className="text-zinc-400 col-span-full">No campus stories available.</p>
+            <p className="text-zinc-400 dark:text-zinc-500 col-span-full">No campus stories available.</p>
           )}
 
           {/* Fixed Blunt Card */}
@@ -72,25 +72,25 @@ export default async function CampusPage() {
             rel="noopener noreferrer"
             className="group cursor-pointer block"
           >
-            <div className="h-40 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+            <div className="h-40 bg-zinc-100 dark:bg-zinc-800 mb-3 relative overflow-hidden rounded-sm">
               <SafeImage
                 src="/blunt-banner.png"
                 alt="Blunt"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline mb-2">
+            <h3 className="text-sm font-bold font-serif text-zinc-900 dark:text-zinc-100 leading-tight group-hover:underline mb-2">
               Software company Blunt assigns value to anything imaginable
             </h3>
-            <p className="text-xs text-zinc-500 line-clamp-2 mb-2">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mb-2">
               Blunt builds software that assigns value to anything imaginable — from ideas and assets to opportunities and impact.
             </p>
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold text-zinc-500 uppercase">
+              <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase">
                 BLUNT
               </span>
-              <span className="text-[9px] text-zinc-300">|</span>
-              <span className="text-[9px] text-zinc-400">Source: blunt.ai</span>
+              <span className="text-[9px] text-zinc-300 dark:text-zinc-600">|</span>
+              <span className="text-[9px] text-zinc-400 dark:text-zinc-500">Source: blunt.ai</span>
             </div>
           </a>
         </div>

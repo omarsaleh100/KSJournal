@@ -43,27 +43,27 @@ export default async function Home() {
   const { tickerData, newsData, heroData, featuredData, globalData, deepDiveData, campusData, opinionsData } = await getDailyEdition();
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900 selection:bg-red-100 selection:text-red-900">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100 selection:bg-red-100 selection:text-red-900 dark:selection:bg-red-950 dark:selection:text-red-200">
       <Header />
       <Ticker items={tickerData} />
 
       <main className="container mx-auto px-4 py-8">
-        
+
         {/* Date Header */}
-        <div className="border-b border-zinc-900 mb-8 pb-1 flex justify-between items-end">
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+        <div className="border-b border-zinc-900 dark:border-zinc-100 mb-8 pb-1 flex justify-between items-end">
+          <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
             Vol. CXXIV No. 12
           </span>
-          <span className="text-xs font-serif italic text-zinc-500">
+          <span className="text-xs font-serif italic text-zinc-500 dark:text-zinc-400">
             <CurrentDate />  {/* <--- Replaced the old span code with this */}
           </span>
         </div>
 
         {/* SECTION 1: THE BROADSHEET */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-zinc-900 pb-12 mb-12">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-zinc-900 dark:border-zinc-100 pb-12 mb-12">
+
           {/* LEFT: WHAT'S NEWS */}
-          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-6">
+          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 dark:lg:border-zinc-700 lg:pr-6">
             <WhatsNews business={newsData.business || []} world={newsData.world || []} />
           </aside>
 
@@ -72,26 +72,26 @@ export default async function Home() {
             {/* 1. Real Hero Story */}
             {heroData ? (
               <article className="mb-8 group cursor-pointer">
-                <div className="relative aspect-video w-full mb-4 overflow-hidden bg-zinc-100">
+                <div className="relative aspect-video w-full mb-4 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     <SafeImage src={heroData.imageUrl} alt="Hero" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-bold text-red-800 uppercase tracking-widest">Special Report</span>
+                  <span className="text-xs font-bold text-red-800 dark:text-red-400 uppercase tracking-widest">Special Report</span>
                   <Link href={`/article/hero-${slugify(heroData.title)}`}>
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-zinc-900 leading-tight group-hover:text-red-800 transition-colors">
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-zinc-900 dark:text-zinc-100 leading-tight group-hover:text-red-800 dark:group-hover:text-red-400 transition-colors">
                       {heroData.title}
                     </h1>
                   </Link>
-                  <p className="text-lg text-zinc-600 font-serif leading-relaxed line-clamp-3">
+                  <p className="text-lg text-zinc-600 dark:text-zinc-400 font-serif leading-relaxed line-clamp-3">
                     {heroData.subtitle}
                   </p>
-                  <span className="text-xs font-bold text-zinc-400 mt-2">By {heroData.author}</span>
+                  <span className="text-xs font-bold text-zinc-400 dark:text-zinc-500 mt-2">By {heroData.author}</span>
                 </div>
               </article>
-            ) : <div className="h-64 bg-zinc-50 animate-pulse" />}
-            
+            ) : <div className="h-64 bg-zinc-50 dark:bg-zinc-900 animate-pulse" />}
+
             {/* 2. Real Featured Stories */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t border-zinc-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t border-zinc-100 dark:border-zinc-800">
                {featuredData.length > 0 ? featuredData.map((news: any, i: number) => (
                  <NewsCard
                     key={i}
@@ -103,19 +103,19 @@ export default async function Home() {
                     author={news.author}
                     className="border-none p-0 shadow-none hover:shadow-none bg-transparent"
                  />
-               )) : <p className="text-xs text-zinc-400">Loading featured news...</p>}
+               )) : <p className="text-xs text-zinc-400 dark:text-zinc-500">Loading featured news...</p>}
             </div>
           </section>
 
           {/* RIGHT: OPINION */}
-          <aside className="lg:col-span-3 lg:border-l lg:border-zinc-200 lg:pl-6">
+          <aside className="lg:col-span-3 lg:border-l lg:border-zinc-200 dark:lg:border-zinc-700 lg:pl-6">
             <OpinionColumn opinions={opinionsData} />
           </aside>
         </div>
 
 
         {/* SECTION 2: REAL DEEP DIVE */}
-        <section className="bg-zinc-900 text-zinc-50 -mx-4 px-4 py-16 mb-16">
+        <section className="bg-zinc-900 dark:bg-zinc-900 text-zinc-50 -mx-4 px-4 py-16 mb-16">
           <div className="container mx-auto">
             <div className="flex items-center justify-between mb-8 border-b border-zinc-700 pb-4">
                <h2 className="text-xl font-bold uppercase tracking-widest text-white flex items-center gap-2">
@@ -145,10 +145,10 @@ export default async function Home() {
         </section>
 
         {/* SECTION 3: REAL CAMPUS NEWS */}
-          <section className="mb-16 border-b border-zinc-200 pb-12">
+          <section className="mb-16 border-b border-zinc-200 dark:border-zinc-700 pb-12">
             <div className="flex items-center gap-2 mb-6">
-                <Users className="w-5 h-5 text-red-800" />
-                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Campus & Career</h2>
+                <Users className="w-5 h-5 text-red-800 dark:text-red-400" />
+                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">Campus & Career</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {campusData.length > 0 ? campusData.slice(0, 3).map((item: any, i: number) => (
@@ -159,7 +159,7 @@ export default async function Home() {
                     rel="noopener noreferrer"
                     className="group cursor-pointer block"
                   >
-                    <div className="h-32 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+                    <div className="h-32 bg-zinc-100 dark:bg-zinc-800 mb-3 relative overflow-hidden rounded-sm">
                         <SafeImage
                           src={item.image}
                           alt={item.title}
@@ -167,19 +167,19 @@ export default async function Home() {
                         />
                     </div>
 
-                    <span className="text-[10px] font-bold text-red-800 uppercase mb-1 block">
+                    <span className="text-[10px] font-bold text-red-800 dark:text-red-400 uppercase mb-1 block">
                       {item.category}
                     </span>
-                    <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline">
+                    <h3 className="text-sm font-bold font-serif text-zinc-900 dark:text-zinc-100 leading-tight group-hover:underline">
                       {item.title}
                     </h3>
 
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-[9px] font-bold text-zinc-500 uppercase">
+                      <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase">
                         {item.author || "Staff"}
                       </span>
-                      <span className="text-[9px] text-zinc-300">|</span>
-                      <span className="text-[9px] text-zinc-400">
+                      <span className="text-[9px] text-zinc-300 dark:text-zinc-600">|</span>
+                      <span className="text-[9px] text-zinc-400 dark:text-zinc-500">
                         Source: YFile
                       </span>
                     </div>
@@ -193,22 +193,22 @@ export default async function Home() {
                   rel="noopener noreferrer"
                   className="group cursor-pointer block"
                 >
-                  <div className="h-32 bg-zinc-100 mb-3 relative overflow-hidden rounded-sm">
+                  <div className="h-32 bg-zinc-100 dark:bg-zinc-800 mb-3 relative overflow-hidden rounded-sm">
                     <SafeImage
                       src="/blunt-banner.png"
                       alt="Blunt"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
-                  <h3 className="text-sm font-bold font-serif text-zinc-900 leading-tight group-hover:underline">
+                  <h3 className="text-sm font-bold font-serif text-zinc-900 dark:text-zinc-100 leading-tight group-hover:underline">
                     Software company Blunt assigns value to anything imaginable
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[9px] font-bold text-zinc-500 uppercase">
+                    <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase">
                       BLUNT
                     </span>
-                    <span className="text-[9px] text-zinc-300">|</span>
-                    <span className="text-[9px] text-zinc-400">
+                    <span className="text-[9px] text-zinc-300 dark:text-zinc-600">|</span>
+                    <span className="text-[9px] text-zinc-400 dark:text-zinc-500">
                       Source: blunt.ai
                     </span>
                   </div>
@@ -219,28 +219,28 @@ export default async function Home() {
         {/* SECTION 4: REAL GLOBAL BRIEFING */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12">
            <div className="md:col-span-8">
-              <div className="flex items-center gap-2 mb-6 border-b border-zinc-200 pb-2">
-                <TrendingUp className="w-5 h-5 text-red-800" />
-                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900">Global Briefing</h2>
+              <div className="flex items-center gap-2 mb-6 border-b border-zinc-200 dark:border-zinc-700 pb-2">
+                <TrendingUp className="w-5 h-5 text-red-800 dark:text-red-400" />
+                <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">Global Briefing</h2>
               </div>
               <div className="space-y-6">
                 {globalData.map((item: any, i: number) => (
                   <div key={i} className="flex gap-4 group cursor-pointer">
-                    <span className="text-2xl font-bold text-zinc-200 group-hover:text-red-800 transition-colors font-serif">0{i + 1}</span>
+                    <span className="text-2xl font-bold text-zinc-200 dark:text-zinc-700 group-hover:text-red-800 dark:group-hover:text-red-400 transition-colors font-serif">0{i + 1}</span>
                     <div>
-                       <h3 className="text-lg font-bold font-serif text-zinc-900 mb-1 group-hover:text-red-800 transition-colors">{item.headline}</h3>
-                       <p className="text-sm text-zinc-600 leading-relaxed">{item.context}</p>
+                       <h3 className="text-lg font-bold font-serif text-zinc-900 dark:text-zinc-100 mb-1 group-hover:text-red-800 dark:group-hover:text-red-400 transition-colors">{item.headline}</h3>
+                       <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{item.context}</p>
                     </div>
                   </div>
                 ))}
               </div>
            </div>
-           
+
            {/* Newsletter Signup */}
            <div className="md:col-span-4">
-              <div className="bg-zinc-100 p-6 border border-zinc-200 sticky top-24">
-                 <h3 className="text-lg font-serif font-bold text-zinc-900 mb-2">The Daily Brief</h3>
-                 <p className="text-sm text-zinc-600 mb-4">Essential economic news, delivered to your inbox every morning.</p>
+              <div className="bg-zinc-100 dark:bg-zinc-900 p-6 border border-zinc-200 dark:border-zinc-700 sticky top-24">
+                 <h3 className="text-lg font-serif font-bold text-zinc-900 dark:text-zinc-100 mb-2">The Daily Brief</h3>
+                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">Essential economic news, delivered to your inbox every morning.</p>
                  <NewsletterForm />
               </div>
            </div>

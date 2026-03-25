@@ -5,7 +5,7 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { ShareButton } from "@/components/share-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/firebase"; 
+import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { SafeImage } from "@/components/safe-image";
 
@@ -32,7 +32,7 @@ async function getArticleData(id: string) {
           date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
           author: data.author || "The Editorial Board",
           readTime: "5 min read",
-          content: data.content || [], 
+          content: data.content || [],
           keyPoints: data.keyPoints || [],
           imageUrl: data.imageUrl
         };
@@ -136,15 +136,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   if (!article) return notFound();
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100">
       <Header />
       <main className="container mx-auto px-4 py-12 max-w-5xl">
-        
+
         {/* Breadcrumb */}
         <div className="mb-8">
-          <Link 
-            href="/" 
-            className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-red-700 transition-colors"
+          <Link
+            href="/"
+            className="inline-flex items-center text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-red-700 dark:hover:text-red-400 transition-colors"
             aria-label="Back to The Keele Street Journal Homepage"
           >
             <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
@@ -153,31 +153,31 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Article Header */}
-        <header className="mb-10 border-b border-zinc-200 pb-10">
+        <header className="mb-10 border-b border-zinc-200 dark:border-zinc-700 pb-10">
           <div className="flex items-center gap-4 mb-6">
-            <span className="px-3 py-1 bg-red-50 text-red-700 text-xs font-bold uppercase tracking-widest rounded-sm">
+            <span className="px-3 py-1 bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400 text-xs font-bold uppercase tracking-widest rounded-sm">
               {article.category}
             </span>
-            <span className="flex items-center text-zinc-500 text-xs font-medium">
+            <span className="flex items-center text-zinc-500 dark:text-zinc-400 text-xs font-medium">
               <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
               {article.readTime}
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-zinc-900 leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-zinc-900 dark:text-zinc-100 leading-tight mb-6">
             {article.title}
           </h1>
 
-          <p className="text-xl md:text-2xl text-zinc-500 font-serif leading-relaxed max-w-3xl">
+          <p className="text-xl md:text-2xl text-zinc-500 dark:text-zinc-400 font-serif leading-relaxed max-w-3xl">
             {article.subtitle}
           </p>
 
           <div className="mt-8 flex items-center justify-between">
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-zinc-900 uppercase tracking-wide">
+              <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wide">
                 By {article.author}
               </span>
-              <span className="text-xs text-zinc-400 font-mono mt-1">
+              <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono mt-1">
                 PUBLISHED: {article.date}
               </span>
             </div>
@@ -188,24 +188,24 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
         {/* Hero Image */}
         {article.imageUrl && (
-          <div className="mb-10 relative aspect-video w-full overflow-hidden bg-zinc-100 rounded-sm">
+          <div className="mb-10 relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 rounded-sm">
             <SafeImage src={article.imageUrl} alt={article.title} className="object-cover w-full h-full" />
           </div>
         )}
 
         {/* Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
+
           {/* Sidebar */}
           <aside className="lg:col-span-4 order-2 lg:order-1">
-            <div className="bg-zinc-50 border border-zinc-200 p-6 rounded-sm sticky top-24">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900 mb-4 border-b border-zinc-200 pb-2">
+            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 p-6 rounded-sm sticky top-24">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100 mb-4 border-b border-zinc-200 dark:border-zinc-700 pb-2">
                 Key Takeaways
               </h3>
               <ul className="space-y-4">
                 {article.keyPoints && article.keyPoints.map((point: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm text-zinc-700 leading-relaxed">
-                    <span className="min-w-1.5 h-1.5 rounded-full bg-red-700 mt-2" aria-hidden="true" />
+                  <li key={idx} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                    <span className="min-w-1.5 h-1.5 rounded-full bg-red-700 dark:bg-red-500 mt-2" aria-hidden="true" />
                     {point}
                   </li>
                 ))}
@@ -215,9 +215,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
           {/* Article Body */}
           <article className="lg:col-span-8 order-1 lg:order-2">
-            <div className="prose prose-lg prose-zinc max-w-none font-serif">
+            <div className="prose prose-lg prose-zinc dark:prose-invert max-w-none font-serif">
                {Array.isArray(article.content) && article.content.map((paragraph: string, idx: number) => (
-                  <p key={idx} className={`mb-6 leading-loose text-zinc-800 ${idx === 0 ? "first-letter:text-5xl first-letter:font-bold first-letter:text-zinc-900 first-letter:mr-3 first-letter:float-left first-letter:leading-none" : ""}`}>
+                  <p key={idx} className={`mb-6 leading-loose text-zinc-800 dark:text-zinc-300 ${idx === 0 ? "first-letter:text-5xl first-letter:font-bold first-letter:text-zinc-900 dark:first-letter:text-zinc-100 first-letter:mr-3 first-letter:float-left first-letter:leading-none" : ""}`}>
                     {paragraph}
                   </p>
                ))}

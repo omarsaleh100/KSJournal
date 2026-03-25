@@ -33,25 +33,25 @@ export default async function MarketsPage() {
   const { deepDiveData, tickerData, marketStories } = await getMarketsData();
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100">
       <Header />
 
       <main className="container mx-auto px-4 py-12">
-        <div className="border-b border-zinc-900 mb-8 pb-2">
+        <div className="border-b border-zinc-900 dark:border-zinc-100 mb-8 pb-2">
           <h1 className="text-3xl font-serif font-bold flex items-center gap-3">
-            <BarChart3 className="w-7 h-7 text-red-800" />
+            <BarChart3 className="w-7 h-7 text-red-800 dark:text-red-400" />
             Markets
           </h1>
         </div>
 
         {/* Ticker Strip */}
         {tickerData.length > 0 && (
-          <div className="flex gap-6 overflow-x-auto pb-4 mb-10 border-b border-zinc-200">
+          <div className="flex gap-6 overflow-x-auto pb-4 mb-10 border-b border-zinc-200 dark:border-zinc-700">
             {tickerData.map((item: any, i: number) => (
               <div key={i} className="flex items-center gap-2 text-sm whitespace-nowrap">
-                <span className="font-bold text-zinc-900">{item.symbol}</span>
-                <span className="text-zinc-600">{item.price}</span>
-                <span className={item.change?.startsWith("-") ? "text-red-600" : "text-green-600"}>
+                <span className="font-bold text-zinc-900 dark:text-zinc-100">{item.symbol}</span>
+                <span className="text-zinc-600 dark:text-zinc-400">{item.price}</span>
+                <span className={item.change?.startsWith("-") ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}>
                   {item.change}
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default async function MarketsPage() {
         {/* Market-Related Stories */}
         {marketStories.length > 0 && (
           <section>
-            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 mb-6 border-b border-zinc-200 pb-2">
+            <h2 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100 mb-6 border-b border-zinc-200 dark:border-zinc-700 pb-2">
               Related Stories
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -14,7 +14,7 @@ export function SafeImage({ src, alt, className = "", fallbackClassName = "" }: 
 
   if (!src || error) {
     return (
-      <div className={`flex items-center justify-center bg-zinc-100 text-zinc-400 ${fallbackClassName || className}`}>
+      <div className={`flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 ${fallbackClassName || className}`}>
         <span className="text-xs font-mono uppercase tracking-wider">No Image</span>
       </div>
     );

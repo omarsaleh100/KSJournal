@@ -15,13 +15,13 @@ export function ShareButton() {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-2 px-3 py-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-all text-sm"
+      className="inline-flex items-center gap-2 px-3 py-2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-all text-sm"
       aria-label="Share this article"
     >
       {copied ? (
         <>
-          <Check className="w-4 h-4 text-green-600" />
-          <span className="text-green-600 font-medium">Link copied!</span>
+          <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+          <span className="text-green-600 dark:text-green-400 font-medium">Link copied!</span>
         </>
       ) : (
         <>
